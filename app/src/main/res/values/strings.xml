@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">SmartSlippers App</string>
+    <string name="no_email">No email has been entered</string>
+    <string name="wrong_email">Entered email does not exist</string>
+    <string name="wrong_password">Entered password is not correct</string>
+    <string name="no_password">No password has been entered</string>
+    <string name="no_first_name">No first name has been entered</string>
+    <string name="no_last_name">No last name has been entered</string>
+    <string name="existing_email">This email is already used</string>
+    <string name="no_match_password">Passwords do not match</string>
+    <string name="connect_button_string">Connect</string>
+</resources>

@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "381560728724",
+    "project_id": "fcm-codelab-b29a7",
+    "storage_bucket": "fcm-codelab-b29a7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:381560728724:android:3e610d16e0fe0fe4481881",
+        "android_client_info": {
+          "package_name": "si.uni_lj.fe.tnuv.smartslippers"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "381560728724-q8sqe5otlq6a4citoocrbhs88h4i6nfd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBjWh9B3Xo2vi_4llN793Suji9_mwII7XA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "381560728724-q8sqe5otlq6a4citoocrbhs88h4i6nfd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

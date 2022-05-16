@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical"
+    tools:context=".HomeActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="140dp"
+            app:srcCompat="@drawable/custom_shapes"
+            tools:layout_editor_absoluteX="142dp"
+            tools:layout_editor_absoluteY="142dp" />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="130dp"
+            app:srcCompat="@drawable/logocopati"
+            tools:layout_editor_absoluteX="142dp"
+            tools:layout_editor_absoluteY="142dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="100dp"
+            android:fontFamily="@font/encodesansmedium"
+            android:gravity="center"
+            android:text="Home"
+            android:textColor="@color/white"
+            android:textSize="20dp"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context=".BleOperationsActivity">
+
+            <TextView
+                android:id="@+id/tvCurrActValue"
+                android:layout_width="160dp"
+                android:layout_height="60dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/input_background"
+                android:gravity="center"
+                android:textAlignment="center"
+                android:textColor="@color/inputBela"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="@+id/tvCurrActText"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/tvCurrActText"
+                app:layout_constraintTop_toBottomOf="@+id/tvCurrActText"
+                tools:text="No activity" />
+
+            <TextView
+                android:id="@+id/tvActTimeText"
+                android:layout_width="160dp"
+                android:layout_height="34dp"
+                android:layout_marginEnd="16dp"
+                android:text="Active Time"
+                android:textAlignment="center"
+                android:textColor="@color/textsBlack"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toBottomOf="@+id/tvCurrActText"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/tvCurrActText"
+                app:layout_constraintVertical_bias="0.0" />
+
+            <TextView
+                android:id="@+id/tvLastActText"
+                android:layout_width="160dp"
+                android:layout_height="34dp"
+                android:layout_marginTop="40dp"
+                android:text="Last Activity"
+                android:textAlignment="center"
+                android:textColor="@color/textsBlack"
+                android:textSize="20sp"
+                app:layout_constraintEnd_toEndOf="@+id/tvCurrActText"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="@+id/tvCurrActText"
+                app:layout_constraintTop_toBottomOf="@+id/tvCurrActValue" />
+
+
+            <TextView
+                android:id="@+id/tvCurrActText"
+                android:layout_width="160dp"
+                android:layout_height="34dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="240dp"
+                android:text="Current Activity"
+                android:textAlignment="center"
+                android:textColor="@color/textsBlack"
+                android:textSize="20sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tvLastActValue"
+                android:layout_width="161dp"
+                android:layout_height="68dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/input_background"
+                android:gravity="center"
+                android:textAlignment="center"
+                android:textColor="@color/inputBela"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="@+id/tvLastActText"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/tvLastActText"
+                app:layout_constraintTop_toBottomOf="@+id/tvLastActText"
+                tools:text="No activity yet" />
+
+            <TextView
+                android:id="@+id/tvActTimeValue"
+                android:layout_width="160dp"
+                android:layout_height="60dp"
+                android:background="@drawable/input_background"
+                android:gravity="center"
+                android:textAlignment="center"
+                android:textColor="@color/inputBela"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/tvCurrActValue"
+                app:layout_constraintStart_toStartOf="@+id/tvActTimeText"
+                app:layout_constraintTop_toTopOf="@+id/tvCurrActValue"
+                tools:text="No activity yet" />
+
+            <TextView
+                android:id="@+id/tvStatusText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="100dp"
+                android:text="Current Status"
+                android:textColor="@color/textsBlack"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.498"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tvStatusValue"
+                android:layout_width="260dp"
+                android:layout_height="90dp"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/banner_green"
+                android:gravity="center_horizontal|center_vertical"
+                android:textAlignment="center"
+                android:textColor="#FFFFFF"
+                android:textSize="24sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvStatusText"
+                tools:ignore="TextContrastCheck"
+                tools:text="EVERYTHING IS GOOD" />
+
+            <TextView
+                android:id="@+id/tvConnStatusIndicator"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="28dp"
+                android:background="@drawable/status_led"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tvConnStatusText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:textColor="@color/textsBlack"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/tvConnStatusIndicator"
+                app:layout_constraintStart_toEndOf="@+id/tvConnStatusIndicator"
+                app:layout_constraintTop_toTopOf="@+id/tvConnStatusIndicator"
+                tools:text="Slippers Connected" />
+
+            <Button
+                android:id="@+id/tvButtonReconnect"
+                android:layout_width="130dp"
+                android:layout_height="48dp"
+                android:layout_marginEnd="16dp"
+                android:backgroundTint="#03A9F4"
+                android:text="RECONNECT"
+                android:textColor="#FFFFFF"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toBottomOf="@+id/tvConnStatusIndicator"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/tvConnStatusIndicator" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/settingsBtn"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_gravity="bottom"
+            android:layout_weight="1"
+            android:background="@drawable/toolbar_levo"
+            android:fontFamily="@font/encodesansmedium"
+            android:text="SETTINGS"
+            android:textColor="@color/white"
+            android:textSize="10sp"
+            android:textStyle="bold" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/homeBtn"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_gravity="bottom"
+            android:layout_weight="1"
+            android:background="@drawable/toolbar_middle"
+            android:fontFamily="@font/encodesansmedium"
+            android:text="HOME"
+            android:textColor="@color/white"
+            android:textSize="10sp"
+            android:textStyle="bold" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/statsBtn"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_gravity="bottom"
+            android:layout_weight="1"
+            android:background="@drawable/toolbar_right"
+            android:fontFamily="@font/encodesansmedium"
+            android:text="STATS"
+            android:textColor="@color/white"
+            android:textSize="10sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+</LinearLayout>
