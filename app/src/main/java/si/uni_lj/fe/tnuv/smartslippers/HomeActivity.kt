@@ -1,6 +1,5 @@
 package si.uni_lj.fe.tnuv.smartslippers
 
-import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -8,7 +7,6 @@ import android.bluetooth.BluetoothDevice
 import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
-import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -16,24 +14,17 @@ import android.view.MenuItem
 import android.view.Window
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import java.text.SimpleDateFormat
-import si.uni_lj.fe.tnuv.smartslippers.ble.ConnectionEventListener
-import si.uni_lj.fe.tnuv.smartslippers.ble.ConnectionManager
+import si.uni_lj.fe.tnuv.smartslippers.ble.*
 import si.uni_lj.fe.tnuv.smartslippers.ble.ConnectionManager.isConnected
 import si.uni_lj.fe.tnuv.smartslippers.ble.ConnectionManager.readCharacteristic
 import si.uni_lj.fe.tnuv.smartslippers.ble.ConnectionManager.teardownConnection
-import si.uni_lj.fe.tnuv.smartslippers.ble.isIndicatable
-import si.uni_lj.fe.tnuv.smartslippers.ble.isNotifiable
-import si.uni_lj.fe.tnuv.smartslippers.ble.isReadable
-import si.uni_lj.fe.tnuv.smartslippers.ble.isWritable
-import si.uni_lj.fe.tnuv.smartslippers.ble.isWritableWithoutResponse
-import si.uni_lj.fe.tnuv.smartslippers.ble.toHexString
-import java.util.Date
-import java.util.Locale
-import java.util.UUID
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 class HomeActivity : AppCompatActivity() {
@@ -178,20 +169,16 @@ class HomeActivity : AppCompatActivity() {
         }).start()
     }
 
-    override fun onDestroy() {
-        ConnectionManager.unregisterListener(connectionEventListener)
-        ConnectionManager.teardownConnection(device)
-        super.onDestroy()
+    override fun onResume() {
+        //ConnectionManager.registerListener(connectionEventListener)
+
+        super.onResume()
     }
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        Log.i("TAG", "Option selected $item")
-        when (item.itemId) {
-            android.R.id.home -> {
-                onBackPressed()
-                return true
-            }
-        }
-        return super.onOptionsItemSelected(item)
+
+    override fun onDestroy() {
+        //ConnectionManager.unregisterListener(connectionEventListener)
+        //ConnectionManager.teardownConnection(device)
+        super.onDestroy()
     }
 
     private fun timeFromActivity(timeOfLastActivity: Long): String {
@@ -248,6 +235,7 @@ class HomeActivity : AppCompatActivity() {
 
                     // Send notification
                     sendNotification("FALL DETECTED!")
+                    showAlertDialog()
 
                 }else{
                     tvStatusValue.setBackgroundResource(R.drawable.banner_green);
@@ -378,9 +366,9 @@ class HomeActivity : AppCompatActivity() {
     private fun createNotificationChannel(){
         Log.i("NOT", "Create")
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-            val name = "notification title"
-            val descriptionText = "notification description"
-            val importance = NotificationManager.IMPORTANCE_HIGH
+            val name = "SmartSlippers Notification"
+            val descriptionText = "New event happened"
+            val importance = NotificationManager.IMPORTANCE_DEFAULT
             val channel = NotificationChannel(CHANNEL_ID,name,importance).apply {
                 description = descriptionText
             }
@@ -391,12 +379,35 @@ class HomeActivity : AppCompatActivity() {
 
     private fun sendNotification(enterEmail : String){
         Log.i("NOT", "Send")
+
+
         /*
-        val intent = Intent(this, HomeActivity::class.java).apply{
+        var intent = Intent(this, HomeActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
+        intent.putExtra(BluetoothDevice.EXTRA_DEVICE, device)
         */
-        val pendingIntent: PendingIntent = PendingIntent.getActivity(this, 0, intent, 0)
+
+
+        /* NOT WORKING
+        val intent = packageManager.getLaunchIntentForPackage("si.uni_lj.fe.tnuv.smartslippers")
+            ?.apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            }
+
+         */
+
+        /*
+        val pm = packageManager
+        val notificationIntent = pm.getLaunchIntentForPackage("si.uni_lj.fe.tnuv.smartslippers")
+        val pendingIntent = PendingIntent.getActivity(
+            applicationContext, 0,
+            notificationIntent, 0
+        )
+
+         */
+
+        //val pendingIntent: PendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_MUTABLE)
 
 
 
@@ -410,10 +421,28 @@ class HomeActivity : AppCompatActivity() {
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setLargeIcon(bitmapLargeIcon)
             .setStyle((NotificationCompat.BigPictureStyle().bigPicture(bitmap)))
-            .setContentIntent(pendingIntent)
+            //.setContentIntent(pendingIntent)
+            //.setAutoCancel(true)
 
         with(NotificationManagerCompat.from(this)){
             notify(notificationId, builder.build())
         }
+    }
+
+    private fun showAlertDialog() {
+        val alertDialog: AlertDialog.Builder = AlertDialog.Builder(this@HomeActivity)
+        alertDialog.setTitle("Fall has been detected")
+        alertDialog.setMessage("Do you wat to make a call?")
+        alertDialog.setPositiveButton(
+            "yes"
+        ) { _, _ ->
+            Toast.makeText(this@HomeActivity, "Calling the first contact.", Toast.LENGTH_LONG).show()
+        }
+        alertDialog.setNegativeButton(
+            "No"
+        ) { _, _ -> }
+        val alert: AlertDialog = alertDialog.create()
+        alert.setCanceledOnTouchOutside(false)
+        alert.show()
     }
 }

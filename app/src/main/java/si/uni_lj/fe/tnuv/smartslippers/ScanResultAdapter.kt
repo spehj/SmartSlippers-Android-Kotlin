@@ -32,9 +32,9 @@ import androidx.core.app.ActivityCompat.requestPermissions
 import androidx.core.content.ContextCompat
 import androidx.core.content.PermissionChecker.checkPermission
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.row_scan_result.view.device_name
-import kotlinx.android.synthetic.main.row_scan_result.view.mac_address
-import kotlinx.android.synthetic.main.row_scan_result.view.signal_strength
+//import kotlinx.android.synthetic.main.row_scan_result.view.device_name
+//import kotlinx.android.synthetic.main.row_scan_result.view.mac_address
+//import kotlinx.android.synthetic.main.row_scan_result.view.signal_strength
 import java.security.AccessController
 import si.uni_lj.fe.tnuv.smartslippers.ConnectionActivity as ConnectionActivity
 import java.security.AccessController.checkPermission as checkPermission1
@@ -95,19 +95,14 @@ class ScanResultAdapter(
                 //                                          int[] grantResults)
                 // to handle the case where the user grants the permission. See the documentation
                 // for ActivityCompat#requestPermissions for more details.
-                if (ContextCompat.checkSelfPermission(view.context, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_DENIED)
-                {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
-                    {
-                        ActivityCompat.requestPermissions(ConnectionActivity, new String[]{Manifest.permission.BLUETOOTH_CONNECT}, 2);
-                        return;
-                    }
-                }
                 Log.i("ADA", "No ble on...")
             } else {
-                view.device_name.text = result.device.name ?: "Unnamed"
-                view.mac_address.text = result.device.address
-                view.signal_strength.text = "${result.rssi} dBm"
+                val deviceName = view.findViewById<TextView>(R.id.device_name)
+                val macAddres = view.findViewById<TextView>(R.id.mac_address)
+                val signalStrength = view.findViewById<TextView>(R.id.signal_strength)
+                deviceName.text = result.device.name ?: "Unnamed"
+                macAddres.text = result.device.address
+                signalStrength.text = "${result.rssi} dBm"
                 view.setOnClickListener { onClickListener.invoke(result) }
                 //}
 

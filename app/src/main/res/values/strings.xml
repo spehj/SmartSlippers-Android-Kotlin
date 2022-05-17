@@ -8,5 +8,7 @@
     <string name="no_last_name">No last name has been entered</string>
     <string name="existing_email">This email is already used</string>
     <string name="no_match_password">Passwords do not match</string>
-    <string name="connect_button_string">Connect</string>
+    <string name="connect_button_string">CONNECT</string>
+    <string name="connection_string">Choose your slippers</string>
+    <string name="search_string">SEARCH FOR DEVICES</string>
 </resources>

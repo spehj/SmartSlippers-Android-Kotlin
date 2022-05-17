@@ -198,10 +198,11 @@
                 android:layout_width="130dp"
                 android:layout_height="48dp"
                 android:layout_marginEnd="16dp"
-                android:backgroundTint="#03A9F4"
+                android:backgroundTint="@color/buttonModra"
                 android:text="RECONNECT"
                 android:textColor="#FFFFFF"
                 android:textSize="12sp"
+                app:cornerRadius="20dp"
                 app:layout_constraintBottom_toBottomOf="@+id/tvConnStatusIndicator"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/tvConnStatusIndicator" />
