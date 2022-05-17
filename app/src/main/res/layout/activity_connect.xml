@@ -71,7 +71,8 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvConnectionText"
-        tools:listitem="@layout/row_scan_result" />
+        tools:listitem="@layout/row_scan_result"
+        android:foreground="?android:attr/selectableItemBackground"/>
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/connect_button"

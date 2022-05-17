@@ -25,6 +25,7 @@
         <entry key="app/src/main/res/drawable/button_background.xml" value="0.185" />
         <entry key="app/src/main/res/drawable/custom_shapes.xml" value="0.185" />
         <entry key="app/src/main/res/drawable/input_background.xml" value="0.185" />
+        <entry key="app/src/main/res/drawable/selector_row.xml" value="0.255" />
         <entry key="app/src/main/res/drawable/status_led.xml" value="0.185" />
         <entry key="app/src/main/res/drawable/status_led_disconnected.xml" value="0.185" />
         <entry key="app/src/main/res/drawable/toolbar_levo.xml" value="0.225" />

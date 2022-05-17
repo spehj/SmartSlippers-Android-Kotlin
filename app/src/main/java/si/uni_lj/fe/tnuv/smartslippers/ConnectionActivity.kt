@@ -20,6 +20,7 @@ import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -38,6 +39,7 @@ class ConnectionActivity : AppCompatActivity(){
     private lateinit var scanButton: Button
     private lateinit var connectButton : Button
     private lateinit var scanResultsRecView : RecyclerView
+    private  lateinit var scanRow: ConstraintLayout
 
     /*******************************************
      * Properties
@@ -81,6 +83,8 @@ class ConnectionActivity : AppCompatActivity(){
             }
             with(result.device) {
                 // Dodaj da se izbrano polje obarva modro
+                scanRow = findViewById(R.id.connect_row_id)
+                scanRow.setSelected(true)
                 Timber.w("Connecting to $address")
                 connectButton.setOnClickListener {
                     ConnectionManager.connect(this, this@ConnectionActivity)
@@ -106,6 +110,7 @@ class ConnectionActivity : AppCompatActivity(){
         supportActionBar?.hide()
 
         setContentView(R.layout.activity_connect)
+
 
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())

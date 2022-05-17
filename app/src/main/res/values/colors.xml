@@ -15,4 +15,5 @@
     <color name="inputBela">#FFFFFC</color>
     <color name="textsBlack">#272727</color>
     <color name="bannerGreen">#00D7AE</color>
+    <color name="selectedGray">#f2f2f2</color>
 </resources>

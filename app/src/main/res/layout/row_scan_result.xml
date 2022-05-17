@@ -22,7 +22,11 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="8dp"
-    android:background="?android:attr/selectableItemBackground">
+    android:clickable="true"
+    android:focusable="true"
+    android:background="@drawable/selector_row"
+    android:id="@+id/connect_row_id"
+    >
 
     <TextView
         android:id="@+id/device_name"
