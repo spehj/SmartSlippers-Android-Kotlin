@@ -1,16 +1,12 @@
 package si.uni_lj.fe.tnuv.smartslippers
 
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.PendingIntent
+import android.app.*
 import android.bluetooth.BluetoothDevice
-import android.content.Context
-import android.content.Intent
+import android.content.*
 import android.graphics.BitmapFactory
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.view.MenuItem
 import android.view.Window
 import android.widget.Button
 import android.widget.TextView
@@ -23,17 +19,25 @@ import si.uni_lj.fe.tnuv.smartslippers.ble.*
 import si.uni_lj.fe.tnuv.smartslippers.ble.ConnectionManager.isConnected
 import si.uni_lj.fe.tnuv.smartslippers.ble.ConnectionManager.readCharacteristic
 import si.uni_lj.fe.tnuv.smartslippers.ble.ConnectionManager.teardownConnection
+import si.uni_lj.fe.tnuv.smartslippers.databinding.HomeActivityBinding
+import java.lang.Boolean.getBoolean
 import java.text.SimpleDateFormat
 import java.util.*
 
 
 class HomeActivity : AppCompatActivity() {
+    private var timeLastActServ: String? = ""
     private val CHANNEL_ID = "channel_id_example_id_2"
     private val notificationId = 102
     private lateinit var device: BluetoothDevice
     private val dateFormatter = SimpleDateFormat("MMM d, HH:mm:ss", Locale.US)
     lateinit var notificationChannel: NotificationChannel
     lateinit var notificationManager: NotificationManager
+
+    // SERVICE
+    private lateinit var binding : HomeActivityBinding
+    private lateinit var serviceIntent: Intent
+    private var timerStarted = false
 
     // Insert activity values
     private lateinit var tvHojaValue: TextView
@@ -85,9 +89,29 @@ class HomeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         ConnectionManager.registerListener(connectionEventListener)
         super.onCreate(savedInstanceState)
-
         requestWindowFeature(Window.FEATURE_NO_TITLE)
         createNotificationChannel()
+
+
+        // SERVICE
+        binding = HomeActivityBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        //setContentView(R.layout.home_activity)
+
+        if (!MainService.IS_ACTIVITY_RUNNING){
+
+            Log.i("SERVICE", "Starting MainService")
+        }else{
+            Log.i("SERVICE", "MainService already running")
+        }
+        serviceIntent = Intent(applicationContext, MainService::class.java)
+        registerReceiver(updateTime, IntentFilter(MainService.TIMER_UPDATED))
+
+
+
+
+
         supportActionBar?.hide()
         characteristicMap.put("05ed8326-b407-11ec-b909-0242ac120002", "Hoja")
         characteristicMap.put("f72e3316-b407-11ec-b909-0242ac120002", "Stopnice")
@@ -99,7 +123,7 @@ class HomeActivity : AppCompatActivity() {
 
         device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE)
             ?: error("Missing BluetoothDevice from MainActivity!")
-        setContentView(R.layout.home_activity)
+
 
         //tvHojaValue = findViewById(R.id.)
         tvCurrActValue = findViewById(R.id.tvCurrActValue)
@@ -154,6 +178,8 @@ class HomeActivity : AppCompatActivity() {
         ConnectionManager.enableNotifications(device, characteristics[7])
 
         // Declaring Main Thread
+
+        /*
         Thread(Runnable {
             while (true) {
                 // Updating Text View at current
@@ -175,6 +201,28 @@ class HomeActivity : AppCompatActivity() {
                 //Thread.sleep(1000)
             }
         }).start()
+
+         */
+
+
+    }
+
+    private val updateTime : BroadcastReceiver = object : BroadcastReceiver(){
+        override fun onReceive(context: Context, intent: Intent) {
+            timeLastActServ = intent.getStringExtra(MainService.TIME_EXTRA)
+            binding.tvLastActValue.text = timeLastActServ
+        }
+    }
+    private fun startTimer() {
+        serviceIntent.putExtra(MainService.TIME_EXTRA, System.currentTimeMillis())
+        startService(serviceIntent)
+        timerStarted = true
+    }
+    private fun resetTimer() {
+        stopService(serviceIntent)
+        binding.tvLastActValue.text = "Live"
+        timerStarted = false
+
     }
 
     override fun onResume() {
@@ -182,6 +230,8 @@ class HomeActivity : AppCompatActivity() {
 
         super.onResume()
 
+
+        /*
         // Declaring Main Thread
         Thread(Runnable {
             while (true) {
@@ -204,6 +254,8 @@ class HomeActivity : AppCompatActivity() {
                 //Thread.sleep(1000)
             }
         }).start()
+
+         */
     }
 
     override fun onDestroy() {
@@ -246,6 +298,7 @@ class HomeActivity : AppCompatActivity() {
                 if (charValue == 1) {
                     updateUiDecks(charName)
                     hojaActivity.start() // added1
+                    resetTimer()
 
 
                 }
@@ -254,12 +307,14 @@ class HomeActivity : AppCompatActivity() {
                 //this.tvIdleValue.text = charValue.toString()
                 if (charValue == 1) {
                     updateUiDecks(charName)
+                    startTimer()
                 }
             }
             "Stopnice" -> {
                 //this.tvStopniceValue.text = charValue.toString()
                 if (charValue == 1) {
                     updateUiDecks(charName)
+                    resetTimer()
                     // In real app you would use this in case of a fall
                     tvStatusValue.setBackgroundResource(R.drawable.banner_red);
                     tvStatusValue.text = "FALL DETECTED"
@@ -277,13 +332,15 @@ class HomeActivity : AppCompatActivity() {
                 //this.tvDvigaloValue.text = charValue.toString()
                 if (charValue == 1) {
                     updateUiDecks(charName)
+                    resetTimer()
                 }
             }
             "Uncertain" -> {
                 //this.tvUncertainValue.text = charValue.toString()
                 if (charValue == 1) {
                     updateUiDecks(charName)
-                    lastActivityTime = System.currentTimeMillis()
+                    startTimer()
+                    //lastActivityTime = System.currentTimeMillis()
 
                     hojaActivity.stop() // added1
                 }

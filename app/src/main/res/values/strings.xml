@@ -12,4 +12,5 @@
     <string name="connection_string">Choose your slippers</string>
     <string name="search_string">SEARCH FOR DEVICES</string>
     <string name="statistics_headline">Statistics</string>
+    <string name="service_running_status_key">ActService</string>
 </resources>

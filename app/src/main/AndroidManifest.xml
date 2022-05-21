@@ -43,6 +43,7 @@
             android:exported="true" />
         <activity android:name=".SettingsActivity" />
         <activity android:name=".ConnectionActivity" />
+        <service android:name=".MainService"/>
     </application>
 
 </manifest>
