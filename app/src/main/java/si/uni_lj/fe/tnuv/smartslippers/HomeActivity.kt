@@ -120,16 +120,24 @@ class HomeActivity : AppCompatActivity() {
 
         tvButtonReconnect.setOnClickListener(){
             teardownConnection(device)
-            val intent = Intent(this, ConnectionActivity::class.java)
-            startActivity(intent)
+            val intent1 = Intent(this, ConnectionActivity::class.java)
+            startActivity(intent1)
         }
 
         val settingsBtn = findViewById<Button>(R.id.settingsBtn)
 
         settingsBtn.setOnClickListener {
-            val intent = Intent(this, SettingsActivity::class.java)
-            startActivity(intent)
+            val intent2 = Intent(this, SettingsActivity::class.java).putExtra(BluetoothDevice.EXTRA_DEVICE, device)
+            startActivity(intent2)
         }
+
+        val statsBtn = findViewById<Button>(R.id.statsBtn)
+        statsBtn.setOnClickListener {
+            val intent3 = Intent(this, StatisticsActivity::class.java).putExtra(BluetoothDevice.EXTRA_DEVICE, device)
+            startActivity(intent3)
+        }
+
+
 
         // Initial read of characteristics
         readCharacteristic(device, characteristics[3])
@@ -173,6 +181,29 @@ class HomeActivity : AppCompatActivity() {
         //ConnectionManager.registerListener(connectionEventListener)
 
         super.onResume()
+
+        // Declaring Main Thread
+        Thread(Runnable {
+            while (true) {
+                // Updating Text View at current
+                // iteration
+                runOnUiThread {
+                    if (tvCurrActValue.text == "Uncertain") {
+                        tvLastActValue.text = timeFromActivity(lastActivityTime)
+
+                    }
+                    tvActTimeValue.text = hojaActivity.current()
+                }
+
+                // Thread sleep for 1 sec
+                Thread.sleep(1000)
+                // Updating Text View at current
+                // iteration
+                //runOnUiThread{ tv.text = msg2 }
+                // Thread sleep for 1 sec
+                //Thread.sleep(1000)
+            }
+        }).start()
     }
 
     override fun onDestroy() {
@@ -381,12 +412,12 @@ class HomeActivity : AppCompatActivity() {
         Log.i("NOT", "Send")
 
 
-        /*
+
         var intent = Intent(this, HomeActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
         intent.putExtra(BluetoothDevice.EXTRA_DEVICE, device)
-        */
+
 
 
         /* NOT WORKING
@@ -407,7 +438,7 @@ class HomeActivity : AppCompatActivity() {
 
          */
 
-        //val pendingIntent: PendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_MUTABLE)
+        val pendingIntent: PendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
 
 
 
@@ -421,7 +452,7 @@ class HomeActivity : AppCompatActivity() {
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setLargeIcon(bitmapLargeIcon)
             .setStyle((NotificationCompat.BigPictureStyle().bigPicture(bitmap)))
-            //.setContentIntent(pendingIntent)
+            .setContentIntent(pendingIntent)
             //.setAutoCancel(true)
 
         with(NotificationManagerCompat.from(this)){

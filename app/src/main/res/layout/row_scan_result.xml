@@ -26,6 +26,7 @@
     android:focusable="true"
     android:background="@drawable/selector_row"
     android:id="@+id/connect_row_id"
+
     >
 
     <TextView

@@ -33,7 +33,13 @@
         <entry key="app/src/main/res/drawable/toolbar_right.xml" value="0.225" />
         <entry key="app/src/main/res/layout/activity_connect.xml" value="0.31979166666666664" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.24230072463768115" />
-        <entry key="app/src/main/res/layout/home_activity.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/activity_statistics.xml" value="0.18" />
+        <entry key="app/src/main/res/layout/bottom_menu.xml" value="0.2682291666666667" />
+        <entry key="app/src/main/res/layout/forgot_password.xml" value="0.19791666666666666" />
+        <entry key="app/src/main/res/layout/fragment_day.xml" value="0.23177083333333334" />
+        <entry key="app/src/main/res/layout/fragment_month.xml" value="0.23177083333333334" />
+        <entry key="app/src/main/res/layout/fragment_week.xml" value="0.23177083333333334" />
+        <entry key="app/src/main/res/layout/home_activity.xml" value="0.22" />
         <entry key="app/src/main/res/layout/row_characteristic.xml" value="0.31979166666666664" />
         <entry key="app/src/main/res/layout/row_scan_result.xml" value="0.31979166666666664" />
         <entry key="app/src/main/res/layout/settings_activity.xml" value="0.3401268115942029" />
