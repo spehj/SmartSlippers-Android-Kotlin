@@ -173,6 +173,28 @@ class HomeActivity : AppCompatActivity() {
         //ConnectionManager.registerListener(connectionEventListener)
 
         super.onResume()
+        // Declaring Main Thread
+        Thread(Runnable {
+            while (true) {
+                // Updating Text View at current
+                // iteration
+                runOnUiThread {
+                    if (tvCurrActValue.text == "Uncertain") {
+                        tvLastActValue.text = timeFromActivity(lastActivityTime)
+
+                    }
+                    tvActTimeValue.text = hojaActivity.current()
+                }
+
+                // Thread sleep for 1 sec
+                Thread.sleep(1000)
+                // Updating Text View at current
+                // iteration
+                //runOnUiThread{ tv.text = msg2 }
+                // Thread sleep for 1 sec
+                //Thread.sleep(1000)
+            }
+        }).start()
     }
 
     override fun onDestroy() {
