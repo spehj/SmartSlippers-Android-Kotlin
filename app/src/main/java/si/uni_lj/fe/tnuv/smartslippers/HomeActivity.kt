@@ -35,23 +35,25 @@ class HomeActivity : AppCompatActivity() {
     lateinit var notificationManager: NotificationManager
 
     // SERVICE
-    private lateinit var binding : HomeActivityBinding
+    private lateinit var binding: HomeActivityBinding
     private lateinit var serviceIntent: Intent
     private var timerStarted = false
+    private lateinit var charServiceIntent : Intent
 
     // Insert activity values
-    private lateinit var tvHojaValue: TextView
-    private lateinit var tvIdleValue: TextView
-    private lateinit var tvStopniceValue: TextView
-    private lateinit var tvDvigaloValue: TextView
-    private lateinit var tvUncertainValue: TextView
     private lateinit var tvCurrActValue: TextView
     private lateinit var tvLastActValue: TextView
     private lateinit var tvActTimeValue: TextView
-    private  lateinit var tvStatusValue: TextView
-    private lateinit var tvConnStatusIndicator : TextView
+    private lateinit var tvStatusValue: TextView
+    private lateinit var tvConnStatusIndicator: TextView
     private lateinit var tvConnStatusText: TextView
     private lateinit var tvButtonReconnect: Button
+
+
+    companion object{
+        var IS_FIRST_TIME = true
+    }
+
 
     val hojaActivity = UserActivity("Hoja")
 
@@ -78,16 +80,12 @@ class HomeActivity : AppCompatActivity() {
             }.toList()
         }.toMap()
     }
-    /*
-    private val characteristicAdapter: CharacteristicAdapter by lazy {
-        CharacteristicAdapter(characteristics) {}
-    }
 
-     */
     private var notifyingCharacteristics = mutableListOf<UUID>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        ConnectionManager.registerListener(connectionEventListener)
+
+
         super.onCreate(savedInstanceState)
         requestWindowFeature(Window.FEATURE_NO_TITLE)
         createNotificationChannel()
@@ -96,21 +94,22 @@ class HomeActivity : AppCompatActivity() {
         // SERVICE
         binding = HomeActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        //setContentView(R.layout.home_activity) // Old way
 
-        //setContentView(R.layout.home_activity)
-
-        if (!MainService.IS_ACTIVITY_RUNNING){
+        if (!MainService.IS_ACTIVITY_RUNNING) {
 
             Log.i("SERVICE", "Starting MainService")
-        }else{
+        } else {
             Log.i("SERVICE", "MainService already running")
         }
+
+        // SERVICE
         serviceIntent = Intent(applicationContext, MainService::class.java)
+        charServiceIntent = Intent(applicationContext, CharacteristicsService::class.java)
+
+
         registerReceiver(updateTime, IntentFilter(MainService.TIMER_UPDATED))
-
-
-
-
+        registerReceiver(updateCurrentActivity, IntentFilter(CharacteristicsService.CHAR_UPDATED))
 
         supportActionBar?.hide()
         characteristicMap.put("05ed8326-b407-11ec-b909-0242ac120002", "Hoja")
@@ -125,6 +124,18 @@ class HomeActivity : AppCompatActivity() {
             ?: error("Missing BluetoothDevice from MainActivity!")
 
 
+        if (IS_FIRST_TIME){
+            ConnectionManager.registerListener(connectionEventListener)
+            // Here we define all characteristics where we want notifications
+            ConnectionManager.enableNotifications(device, characteristics[3])
+            ConnectionManager.enableNotifications(device, characteristics[4])
+            ConnectionManager.enableNotifications(device, characteristics[5])
+            ConnectionManager.enableNotifications(device, characteristics[6])
+            ConnectionManager.enableNotifications(device, characteristics[7])
+            IS_FIRST_TIME = false
+        }
+
+
         //tvHojaValue = findViewById(R.id.)
         tvCurrActValue = findViewById(R.id.tvCurrActValue)
         tvLastActValue = findViewById(R.id.tvLastActValue)
@@ -134,33 +145,37 @@ class HomeActivity : AppCompatActivity() {
         tvConnStatusText = findViewById(R.id.tvConnStatusText)
 
         // Set initial BLE status indicator and text
-        if (device.isConnected()){
+        if (device.isConnected()) {
             //tvConnStatusIndicator.setBackgroundColor(Color.parseColor("#00D7AE"))
-                tvConnStatusIndicator.setBackgroundResource(R.drawable.status_led);
+            tvConnStatusIndicator.setBackgroundResource(R.drawable.status_led);
 
             tvConnStatusText.text = "Slippers Connected"
         }
         tvButtonReconnect = findViewById(R.id.tvButtonReconnect);
 
-        tvButtonReconnect.setOnClickListener(){
+        tvButtonReconnect.setOnClickListener() {
             teardownConnection(device)
             val intent1 = Intent(this, ConnectionActivity::class.java)
             startActivity(intent1)
         }
 
         val settingsBtn = findViewById<Button>(R.id.settingsBtn)
-
         settingsBtn.setOnClickListener {
-            val intent2 = Intent(this, SettingsActivity::class.java).putExtra(BluetoothDevice.EXTRA_DEVICE, device)
+            val intent2 = Intent(this, SettingsActivity::class.java).putExtra(
+                BluetoothDevice.EXTRA_DEVICE,
+                device
+            )
             startActivity(intent2)
         }
 
         val statsBtn = findViewById<Button>(R.id.statsBtn)
         statsBtn.setOnClickListener {
-            val intent3 = Intent(this, StatisticsActivity::class.java).putExtra(BluetoothDevice.EXTRA_DEVICE, device)
+            val intent3 = Intent(this, StatisticsActivity::class.java).putExtra(
+                BluetoothDevice.EXTRA_DEVICE,
+                device
+            )
             startActivity(intent3)
         }
-
 
 
         // Initial read of characteristics
@@ -170,54 +185,34 @@ class HomeActivity : AppCompatActivity() {
         readCharacteristic(device, characteristics[6])
         readCharacteristic(device, characteristics[7])
 
-        // Here we define all characteristics where we want notifications
-        ConnectionManager.enableNotifications(device, characteristics[3])
-        ConnectionManager.enableNotifications(device, characteristics[4])
-        ConnectionManager.enableNotifications(device, characteristics[5])
-        ConnectionManager.enableNotifications(device, characteristics[6])
-        ConnectionManager.enableNotifications(device, characteristics[7])
 
-        // Declaring Main Thread
-
-        /*
-        Thread(Runnable {
-            while (true) {
-                // Updating Text View at current
-                // iteration
-                runOnUiThread {
-                    if (tvCurrActValue.text == "Uncertain") {
-                        tvLastActValue.text = timeFromActivity(lastActivityTime)
-
-                    }
-                    tvActTimeValue.text = hojaActivity.current()
-                }
-
-                // Thread sleep for 1 sec
-                Thread.sleep(1000)
-                // Updating Text View at current
-                // iteration
-                //runOnUiThread{ tv.text = msg2 }
-                // Thread sleep for 1 sec
-                //Thread.sleep(1000)
-            }
-        }).start()
-
-         */
 
 
     }
 
-    private val updateTime : BroadcastReceiver = object : BroadcastReceiver(){
+    private val updateTime: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             timeLastActServ = intent.getStringExtra(MainService.TIME_EXTRA)
+            Log.i("CHARSERV", "Time from last activity: $timeLastActServ")
             binding.tvLastActValue.text = timeLastActServ
         }
     }
+
+    private val updateCurrentActivity: BroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            val newChar = intent.getStringExtra(MainService.CHAR_EXTRA)
+            Log.i("CHARSERV", "New value of char: $newChar")
+            binding.tvCurrActValue.text = newChar
+            stopService(charServiceIntent)
+        }
+    }
+
     private fun startTimer() {
         serviceIntent.putExtra(MainService.TIME_EXTRA, System.currentTimeMillis())
         startService(serviceIntent)
         timerStarted = true
     }
+
     private fun resetTimer() {
         stopService(serviceIntent)
         binding.tvLastActValue.text = "Live"
@@ -225,61 +220,19 @@ class HomeActivity : AppCompatActivity() {
 
     }
 
-    override fun onResume() {
-        //ConnectionManager.registerListener(connectionEventListener)
+    private fun updateActivity(charName: String?, charValue: String){
 
-        super.onResume()
-
-
-        /*
-        // Declaring Main Thread
-        Thread(Runnable {
-            while (true) {
-                // Updating Text View at current
-                // iteration
-                runOnUiThread {
-                    if (tvCurrActValue.text == "Uncertain") {
-                        tvLastActValue.text = timeFromActivity(lastActivityTime)
-
-                    }
-                    tvActTimeValue.text = hojaActivity.current()
-                }
-
-                // Thread sleep for 1 sec
-                Thread.sleep(1000)
-                // Updating Text View at current
-                // iteration
-                //runOnUiThread{ tv.text = msg2 }
-                // Thread sleep for 1 sec
-                //Thread.sleep(1000)
-            }
-        }).start()
-
-         */
-    }
-
-    override fun onDestroy() {
-        //ConnectionManager.unregisterListener(connectionEventListener)
-        //ConnectionManager.teardownConnection(device)
-        super.onDestroy()
-    }
-
-    private fun timeFromActivity(timeOfLastActivity: Long): String {
-        val timeNow: Long = System.currentTimeMillis()
-        val timeDifference: Long = timeNow - timeOfLastActivity
-        // timeDifference is in milliseconds
-        var seconds = timeDifference / 1000
-        var minutes = seconds / 60
-        var hours = minutes / 60
-        var secondsLeft = seconds - (60 * minutes)
-        val minutesLeft = minutes - (60 * hours)
-
-        var result = if (hours >= 24) {
-            ">1 day"
-        } else {
-            "${hours}h ${minutesLeft}min ${secondsLeft}s ago"
+        val extras = Bundle().apply {
+            putString(CharacteristicsService.CHAR_EXTRA, charName)
+            putString(CharacteristicsService.CHAR_VALUE, charValue)
         }
-        return result
+        charServiceIntent.putExtras(extras)
+        startService(charServiceIntent)
+    }
+
+    private fun stopActivityService(){
+        // Stop listening for characteristcs change from Arduino
+        stopService(charServiceIntent)
     }
 
     private fun updateUiDecks(charName: String?) {
@@ -289,6 +242,9 @@ class HomeActivity : AppCompatActivity() {
         }
 
     }
+
+
+    /*
 
     // Function that catch new values from Arduino Nano 33 BLE
     private fun getNewValues(charName: String?, charValue: Int) {
@@ -323,7 +279,7 @@ class HomeActivity : AppCompatActivity() {
                     sendNotification("FALL DETECTED!")
                     showAlertDialog()
 
-                }else{
+                } else {
                     tvStatusValue.setBackgroundResource(R.drawable.banner_green);
                     tvStatusValue.text = "EVERYTHING IS GOOD"
                 }
@@ -355,6 +311,8 @@ class HomeActivity : AppCompatActivity() {
 
 
     }
+
+     */
 
     @OptIn(ExperimentalStdlibApi::class)
     private val connectionEventListener by lazy {
@@ -390,10 +348,14 @@ class HomeActivity : AppCompatActivity() {
 
 
                 Log.i("OPERATIONS", "Value read on ${characteristicName}: ${intReceived}")
+                updateActivity(characteristicName, intReceived.toString())
                 // Pass new values to activity
+                /*
                 runOnUiThread {
                     getNewValues(characteristicName, intReceived)
                 }
+
+                 */
             }
 
             onCharacteristicChanged = { _, characteristic ->
@@ -408,10 +370,14 @@ class HomeActivity : AppCompatActivity() {
 
 
                 Log.i("OPERATIONS", "Value changed on ${characteristicName}: ${intReceived}")
+                updateActivity(characteristicName, intReceived.toString())
                 // Pass new values to activity
+                /*
                 runOnUiThread {
                     getNewValues(characteristicName, intReceived)
                 }
+
+                 */
 
 
             }
@@ -451,30 +417,29 @@ class HomeActivity : AppCompatActivity() {
             }
     }
 
-    private fun createNotificationChannel(){
+    private fun createNotificationChannel() {
         Log.i("NOT", "Create")
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val name = "SmartSlippers Notification"
             val descriptionText = "New event happened"
             val importance = NotificationManager.IMPORTANCE_DEFAULT
-            val channel = NotificationChannel(CHANNEL_ID,name,importance).apply {
+            val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
                 description = descriptionText
             }
-            val notificationManager: NotificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            val notificationManager: NotificationManager =
+                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.createNotificationChannel(channel)
         }
     }
 
-    private fun sendNotification(enterEmail : String){
+    private fun sendNotification(enterEmail: String) {
         Log.i("NOT", "Send")
-
 
 
         var intent = Intent(this, HomeActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
         intent.putExtra(BluetoothDevice.EXTRA_DEVICE, device)
-
 
 
         /* NOT WORKING
@@ -495,12 +460,14 @@ class HomeActivity : AppCompatActivity() {
 
          */
 
-        val pendingIntent: PendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
+        val pendingIntent: PendingIntent =
+            PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
 
 
-
-        val bitmap = BitmapFactory.decodeResource(applicationContext.resources, R.drawable.logocopati)
-        val bitmapLargeIcon = BitmapFactory.decodeResource(applicationContext.resources, R.drawable.logocopati)
+        val bitmap =
+            BitmapFactory.decodeResource(applicationContext.resources, R.drawable.logocopati)
+        val bitmapLargeIcon =
+            BitmapFactory.decodeResource(applicationContext.resources, R.drawable.logocopati)
 
         val builder = NotificationCompat.Builder(this, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_launcher_foreground)
@@ -510,9 +477,9 @@ class HomeActivity : AppCompatActivity() {
             .setLargeIcon(bitmapLargeIcon)
             .setStyle((NotificationCompat.BigPictureStyle().bigPicture(bitmap)))
             .setContentIntent(pendingIntent)
-            //.setAutoCancel(true)
+        //.setAutoCancel(true)
 
-        with(NotificationManagerCompat.from(this)){
+        with(NotificationManagerCompat.from(this)) {
             notify(notificationId, builder.build())
         }
     }
@@ -524,7 +491,8 @@ class HomeActivity : AppCompatActivity() {
         alertDialog.setPositiveButton(
             "yes"
         ) { _, _ ->
-            Toast.makeText(this@HomeActivity, "Calling the first contact.", Toast.LENGTH_LONG).show()
+            Toast.makeText(this@HomeActivity, "Calling the first contact.", Toast.LENGTH_LONG)
+                .show()
         }
         alertDialog.setNegativeButton(
             "No"

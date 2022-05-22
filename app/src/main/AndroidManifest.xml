@@ -44,6 +44,7 @@
         <activity android:name=".SettingsActivity" />
         <activity android:name=".ConnectionActivity" />
         <service android:name=".MainService"/>
+        <service android:name=".CharacteristicsService"/>
     </application>
 
 </manifest>
