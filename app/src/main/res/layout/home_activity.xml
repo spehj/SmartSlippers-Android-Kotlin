@@ -150,6 +150,33 @@
                 tools:text="No activity yet" />
 
             <TextView
+                android:id="@+id/tvStepsText"
+                android:layout_width="160dp"
+                android:layout_height="34dp"
+                android:text="Steps Counter"
+                android:textAlignment="center"
+                android:textColor="@color/textsBlack"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toBottomOf="@+id/tvLastActText"
+                app:layout_constraintEnd_toEndOf="@+id/tvActTimeText"
+                app:layout_constraintTop_toTopOf="@+id/tvLastActText" />
+
+            <TextView
+                android:id="@+id/tvStepsValue"
+                android:layout_width="160dp"
+                android:layout_height="60dp"
+                android:background="@drawable/input_background"
+                android:gravity="center"
+                android:textAlignment="center"
+                android:textColor="@color/inputBela"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/tvLastActValue"
+                app:layout_constraintEnd_toEndOf="@+id/tvActTimeValue"
+                app:layout_constraintTop_toTopOf="@+id/tvLastActValue"
+                tools:text="No activity yet" />
+
+            <TextView
                 android:id="@+id/tvStatusText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

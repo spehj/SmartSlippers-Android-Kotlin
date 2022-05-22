@@ -3,13 +3,17 @@ package si.uni_lj.fe.tnuv.smartslippers
 import android.app.Service
 import android.content.Intent
 import android.content.Intent.getIntent
+import android.os.Bundle
 import android.os.IBinder
 import android.util.Log
 
 @Suppress("DEPRECATION")
-class CharacteristicsService: Service() {
+class CharacteristicsService : Service() {
+
     private lateinit var mainServiceIntent: Intent
     override fun onBind(p0: Intent?): IBinder? = null
+
+
 
     companion object {
         const val CHAR_UPDATED = "charUpdated"
@@ -19,6 +23,7 @@ class CharacteristicsService: Service() {
         var IS_FIRST_TIME = true
 
     }
+
     override fun onCreate() {
         super.onCreate()
         IS_ACTIVITY_RUNNING = true
@@ -27,7 +32,7 @@ class CharacteristicsService: Service() {
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         val extras = intent.extras
-        if (extras != null){
+        if (extras != null) {
             val characteristicsName = extras?.getString(CHAR_EXTRA)
             val characteristicsValue = extras?.getString(CHAR_VALUE)
 
@@ -50,35 +55,36 @@ class CharacteristicsService: Service() {
 
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        var IS_ACTIVITY_RUNNING = false
+        var IS_FIRST_TIME = true
+    }
+
     private fun resetTimer() {
         stopService(mainServiceIntent)
         //binding.tvLastActValue.text = "Live"
 
     }
 
-    /*
-    private fun updateUiDecks(charName: String?) {
-        tvCurrActValue.text = charName.toString()
-        if (charName.toString() != "Uncertain") {
-            tvLastActValue.text = "Live"
-        }
-
-    }
-
-     */
-
     // Function that catch new values from Arduino Nano 33 BLE
     private fun getNewValues(charName: String?, charValue: String?) {
         val intent = Intent(CHAR_UPDATED)
         Log.i("CHARSERV", "get char called.")
         when (charName) {
-            "Hoja" -> {
+            "Walking" -> {
                 //this.tvHojaValue.text = charValue.toString()
                 if (charValue == "1") {
+                    val extras = Bundle().apply {
+                        putString(CHAR_EXTRA, charName)
+                        putString(CHAR_VALUE, charValue)
+                    }
+                    intent.putExtras(extras)
+
                     //updateUiDecks(charName)
                     //hojaActivity.start() // added1
                     resetTimer()
-                    intent.putExtra(CHAR_EXTRA, charName)
+
                     Log.i("CHARSERV", "Hoja")
                     sendBroadcast(intent)
 
@@ -90,38 +96,40 @@ class CharacteristicsService: Service() {
                 if (charValue == "1") {
                     //updateUiDecks(charName)
                     startTimer()
-                    intent.putExtra(CHAR_EXTRA, charName)
+                    val extras = Bundle().apply {
+                        putString(CHAR_EXTRA, charName)
+                        putString(CHAR_VALUE, charValue)
+                    }
+                    intent.putExtras(extras)
                     sendBroadcast(intent)
                     Log.i("CHARSERV", "Idle")
                 }
             }
-            "Stopnice" -> {
+            "Stairs" -> {
                 //this.tvStopniceValue.text = charValue.toString()
                 if (charValue == "1") {
                     //updateUiDecks(charName)
                     resetTimer()
-                    intent.putExtra(CHAR_EXTRA, charName)
+                    val extras = Bundle().apply {
+                        putString(CHAR_EXTRA, charName)
+                        putString(CHAR_VALUE, charValue)
+                    }
+                    intent.putExtras(extras)
                     sendBroadcast(intent)
                     Log.i("CHARSERV", "Stopnice")
-                    // In real app you would use this in case of a fall
-                    //tvStatusValue.setBackgroundResource(R.drawable.banner_red);
-                    //tvStatusValue.text = "FALL DETECTED"
 
-                    // Send notification
-                    //sendNotification("FALL DETECTED!")
-                    //showAlertDialog()
-
-                } else {
-                    //tvStatusValue.setBackgroundResource(R.drawable.banner_green);
-                    //tvStatusValue.text = "EVERYTHING IS GOOD"
                 }
             }
-            "Tek" -> {
+            "Running" -> {
                 //this.tvDvigaloValue.text = charValue.toString()
                 if (charValue == "1") {
                     //updateUiDecks(charName)
                     resetTimer()
-                    intent.putExtra(CHAR_EXTRA, charName)
+                    val extras = Bundle().apply {
+                        putString(CHAR_EXTRA, charName)
+                        putString(CHAR_VALUE, charValue)
+                    }
+                    intent.putExtras(extras)
                     sendBroadcast(intent)
                     Log.i("CHARSERV", "Tek")
                 }
@@ -131,7 +139,11 @@ class CharacteristicsService: Service() {
                 if (charValue == "1") {
                     //updateUiDecks(charName)
                     startTimer()
-                    intent.putExtra(CHAR_EXTRA, charName)
+                    val extras = Bundle().apply {
+                        putString(CHAR_EXTRA, charName)
+                        putString(CHAR_VALUE, charValue)
+                    }
+                    intent.putExtras(extras)
                     sendBroadcast(intent)
                     Log.i("CHARSERV", "Uncertain")
                     //lastActivityTime = System.currentTimeMillis()
@@ -139,6 +151,43 @@ class CharacteristicsService: Service() {
                     //hojaActivity.stop() // added1
                 }
             }
+            "Fall" -> {
+                //this.tvUncertainValue.text = charValue.toString()
+                if (charValue == "1") {
+                    //updateUiDecks(charName)
+                    startTimer()
+                    val extras = Bundle().apply {
+                        putString(CHAR_EXTRA, charName)
+                        putString(CHAR_VALUE, charValue)
+                    }
+                    intent.putExtras(extras)
+                    sendBroadcast(intent)
+                    Log.i("CHARSERV", "Uncertain")
+                    //lastActivityTime = System.currentTimeMillis()
+
+                    //hojaActivity.stop() // added1
+                }
+            }
+
+            "Steps" -> {
+                //this.tvUncertainValue.text = charValue.toString()
+
+                //updateUiDecks(charName)
+                //startTimer()
+                val extras = Bundle().apply {
+                    putString(CHAR_EXTRA, charName)
+                    putString(CHAR_VALUE, charValue)
+                }
+                intent.putExtras(extras)
+                sendBroadcast(intent)
+                Log.i("CHARSERV", "Steps: $charValue")
+                //lastActivityTime = System.currentTimeMillis()
+
+                //hojaActivity.stop() // added1
+
+            }
+
+
         }
 
 

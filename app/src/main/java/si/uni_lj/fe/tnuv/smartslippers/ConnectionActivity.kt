@@ -36,6 +36,9 @@ import si.uni_lj.fe.tnuv.smartslippers.ConnectionActivity as ConnectionActivity1
 private const val ENABLE_BLUETOOTH_REQUEST_CODE = 1
 private const val LOCATION_PERMISSION_REQUEST_CODE = 2
 class ConnectionActivity : AppCompatActivity(){
+    private lateinit var serviceIntent: Intent
+    private lateinit var charServiceIntent: Intent
+
     private lateinit var scanButton: Button
     private lateinit var connectButton : Button
     private lateinit var scanResultsRecView : RecyclerView
@@ -110,6 +113,11 @@ class ConnectionActivity : AppCompatActivity(){
         supportActionBar?.hide()
 
         setContentView(R.layout.activity_connect)
+        serviceIntent = Intent(applicationContext, MainService::class.java)
+        charServiceIntent = Intent(applicationContext, CharacteristicsService::class.java)
+        stopService(charServiceIntent)
+        stopService(serviceIntent)
+
 
 
         if (BuildConfig.DEBUG) {

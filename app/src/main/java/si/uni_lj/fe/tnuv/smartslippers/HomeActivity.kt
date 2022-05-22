@@ -1,5 +1,6 @@
 package si.uni_lj.fe.tnuv.smartslippers
 
+import android.annotation.SuppressLint
 import android.app.*
 import android.bluetooth.BluetoothDevice
 import android.content.*
@@ -112,11 +113,13 @@ class HomeActivity : AppCompatActivity() {
         registerReceiver(updateCurrentActivity, IntentFilter(CharacteristicsService.CHAR_UPDATED))
 
         supportActionBar?.hide()
-        characteristicMap.put("05ed8326-b407-11ec-b909-0242ac120002", "Hoja")
-        characteristicMap.put("f72e3316-b407-11ec-b909-0242ac120002", "Stopnice")
-        characteristicMap.put("05f99232-b408-11ec-b909-0242ac120002", "Tek")
+        characteristicMap.put("05ed8326-b407-11ec-b909-0242ac120002", "Walking")
+        characteristicMap.put("f72e3316-b407-11ec-b909-0242ac120002", "Stairs")
+        characteristicMap.put("05f99232-b408-11ec-b909-0242ac120002", "Running")
         characteristicMap.put("f7a9b8d6-b408-11ec-b909-0242ac120002", "Idle")
         characteristicMap.put("44f709ee-d2bf-11ec-9d64-0242ac120002", "Uncertain")
+        characteristicMap.put("9318a796-d8f9-11ec-9d64-0242ac120002", "Fall")
+        characteristicMap.put("684dc082-d8f9-11ec-9d64-0242ac120002", "Steps")
 
         notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
@@ -132,6 +135,8 @@ class HomeActivity : AppCompatActivity() {
             ConnectionManager.enableNotifications(device, characteristics[5])
             ConnectionManager.enableNotifications(device, characteristics[6])
             ConnectionManager.enableNotifications(device, characteristics[7])
+            ConnectionManager.enableNotifications(device, characteristics[8])
+            ConnectionManager.enableNotifications(device, characteristics[9])
             IS_FIRST_TIME = false
         }
 
@@ -151,8 +156,9 @@ class HomeActivity : AppCompatActivity() {
 
             tvConnStatusText.text = "Slippers Connected"
         }
-        tvButtonReconnect = findViewById(R.id.tvButtonReconnect);
 
+        // Listen for button clicks
+        tvButtonReconnect = findViewById(R.id.tvButtonReconnect);
         tvButtonReconnect.setOnClickListener() {
             teardownConnection(device)
             val intent1 = Intent(this, ConnectionActivity::class.java)
@@ -184,6 +190,8 @@ class HomeActivity : AppCompatActivity() {
         readCharacteristic(device, characteristics[5])
         readCharacteristic(device, characteristics[6])
         readCharacteristic(device, characteristics[7])
+        readCharacteristic(device, characteristics[8])
+        readCharacteristic(device, characteristics[9])
 
 
 
@@ -199,11 +207,26 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private val updateCurrentActivity: BroadcastReceiver = object : BroadcastReceiver() {
+        @SuppressLint("LogNotTimber")
         override fun onReceive(context: Context, intent: Intent) {
-            val newChar = intent.getStringExtra(MainService.CHAR_EXTRA)
+            val extras = intent.extras
+            var newChar : String? = ""
+            var newCharValue : String? = ""
+            if (extras != null) {
+                newChar = extras?.getString(CharacteristicsService.CHAR_EXTRA)
+                newCharValue = extras?.getString(CharacteristicsService.CHAR_VALUE)
+            }
+            //val newChar = intent.getStringExtra(MainService.CHAR_EXTRA)
             Log.i("CHARSERV", "New value of char: $newChar")
-            binding.tvCurrActValue.text = newChar
-            stopService(charServiceIntent)
+            if (newChar != "Steps"){
+                binding.tvCurrActValue.text = newChar
+                updateUiDecks(newChar)
+                stopService(charServiceIntent)
+            }
+            else if(newChar == "Steps"){
+                binding.tvStepsValue.text = newCharValue.toString()
+            }
+
         }
     }
 
@@ -237,8 +260,20 @@ class HomeActivity : AppCompatActivity() {
 
     private fun updateUiDecks(charName: String?) {
         tvCurrActValue.text = charName.toString()
-        if (charName.toString() != "Uncertain") {
+        if ((charName.toString() != "Uncertain") || (charName.toString() != "Idle")){
             tvLastActValue.text = "Live"
+        }
+
+        if(charName.toString() == "Fall"){
+            tvStatusValue.setBackgroundResource(R.drawable.banner_red);
+            tvStatusValue.text = "FALL DETECTED"
+            // Send notification
+            sendNotification("FALL DETECTED!")
+            showAlertDialog()
+        }
+        else {
+            tvStatusValue.setBackgroundResource(R.drawable.banner_green);
+            tvStatusValue.text = "EVERYTHING IS GOOD"
         }
 
     }

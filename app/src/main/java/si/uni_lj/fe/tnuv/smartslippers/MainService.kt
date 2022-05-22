@@ -13,9 +13,6 @@ class MainService : Service() {
 
     override fun onCreate() {
         super.onCreate()
-
-
-
     }
 
     private val timer = Timer()
@@ -89,89 +86,6 @@ class MainService : Service() {
         }
         return result
     }
-
-
-    /*
-    // use in HomeActivity
-    private fun updateUiDecks(charName: String?) {
-        tvCurrActValue.text = charName.toString()
-        if (charName.toString() != "Uncertain") {
-            tvLastActValue.text = "Live"
-        }
-
-    }
-
-
-    // Function that catch new values from Arduino Nano 33 BLE
-    private fun getNewValues(charName: String?, charValue: Int) {
-        val intent = Intent(CHAR_UPDATED)
-        when (charName) {
-            "Hoja" -> {
-                //this.tvHojaValue.text = charValue.toString()
-                if (charValue == 1) {
-                    intent.putExtra(TIME_EXTRA, charName)
-                    sendBroadcast(intent)
-
-                    //hojaActivity.start() // added1
-
-                }
-            }
-            "Idle" -> {
-                //this.tvIdleValue.text = charValue.toString()
-                if (charValue == 1) {
-                    intent.putExtra(TIME_EXTRA, charName)
-                    //startTimer()
-                }
-            }
-            "Stopnice" -> {
-                //this.tvStopniceValue.text = charValue.toString()
-                if (charValue == 1) {
-                    intent.putExtra(TIME_EXTRA, charName)
-                    //resetTimer()
-                    // In real app you would use this in case of a fall
-
-                    // ADD TO HOME ACTIVITY
-                    //tvStatusValue.setBackgroundResource(R.drawable.banner_red);
-                    //tvStatusValue.text = "FALL DETECTED"
-
-                    // Send notification
-                    //sendNotification("FALL DETECTED!")
-                    //showAlertDialog()
-
-                } else {
-
-                    //tvStatusValue.setBackgroundResource(R.drawable.banner_green);
-                    //tvStatusValue.text = "EVERYTHING IS GOOD"
-                }
-            }
-            "Tek" -> {
-                //this.tvDvigaloValue.text = charValue.toString()
-                if (charValue == 1) {
-                    intent.putExtra(TIME_EXTRA, charName)
-                    //resetTimer()
-                }
-            }
-            "Uncertain" -> {
-                //this.tvUncertainValue.text = charValue.toString()
-                if (charValue == 1) {
-                    intent.putExtra(TIME_EXTRA, charName)
-                    //startTimer()
-                    //lastActivityTime = System.currentTimeMillis()
-
-                    //hojaActivity.stop() // added1
-                }
-            }
-        }
-
-        // Send value back to HomeActivity
-        sendBroadcast(intent)
-    }
-
-     */
-
-
-
-
 
     companion object {
         const val TIMER_UPDATED = "timerUpdated"
