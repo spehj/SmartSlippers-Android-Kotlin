@@ -38,7 +38,7 @@ private const val LOCATION_PERMISSION_REQUEST_CODE = 2
 class ConnectionActivity : AppCompatActivity(){
     private lateinit var serviceIntent: Intent
     private lateinit var charServiceIntent: Intent
-
+    private lateinit var  activeServiceIntent: Intent
     private lateinit var scanButton: Button
     private lateinit var connectButton : Button
     private lateinit var scanResultsRecView : RecyclerView
@@ -113,10 +113,13 @@ class ConnectionActivity : AppCompatActivity(){
         supportActionBar?.hide()
 
         setContentView(R.layout.activity_connect)
+        // Stop services if reconnecting
         serviceIntent = Intent(applicationContext, MainService::class.java)
         charServiceIntent = Intent(applicationContext, CharacteristicsService::class.java)
+        activeServiceIntent = Intent(applicationContext, ActiveTimeService::class.java)
         stopService(charServiceIntent)
         stopService(serviceIntent)
+        stopService(activeServiceIntent)
 
 
 

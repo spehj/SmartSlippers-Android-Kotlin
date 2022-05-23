@@ -40,7 +40,7 @@
         android:layout_weight="1"
         android:background="@drawable/toolbar_right"
         android:fontFamily="@font/encodesansmedium"
-        android:text="STATS"
+        android:text="STATISTICS"
         android:textColor="@color/white"
         android:textSize="10sp"
         android:textStyle="bold" />

@@ -24,10 +24,12 @@ import si.uni_lj.fe.tnuv.smartslippers.databinding.HomeActivityBinding
 import java.lang.Boolean.getBoolean
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.math.roundToInt
 
 
 class HomeActivity : AppCompatActivity() {
     private var timeLastActServ: String? = ""
+    private var timeOfActivity = 0.0
     private val CHANNEL_ID = "channel_id_example_id_2"
     private val notificationId = 102
     private lateinit var device: BluetoothDevice
@@ -40,6 +42,7 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var serviceIntent: Intent
     private var timerStarted = false
     private lateinit var charServiceIntent : Intent
+    private lateinit var activeServiceIntent :Intent
 
     // Insert activity values
     private lateinit var tvCurrActValue: TextView
@@ -107,10 +110,12 @@ class HomeActivity : AppCompatActivity() {
         // SERVICE
         serviceIntent = Intent(applicationContext, MainService::class.java)
         charServiceIntent = Intent(applicationContext, CharacteristicsService::class.java)
+        activeServiceIntent = Intent(applicationContext, ActiveTimeService::class.java)
 
 
         registerReceiver(updateTime, IntentFilter(MainService.TIMER_UPDATED))
         registerReceiver(updateCurrentActivity, IntentFilter(CharacteristicsService.CHAR_UPDATED))
+        registerReceiver(updateActiveTime, IntentFilter(ActiveTimeService.ACTIVE_UPDATED))
 
         supportActionBar?.hide()
         characteristicMap.put("05ed8326-b407-11ec-b909-0242ac120002", "Walking")
@@ -225,22 +230,38 @@ class HomeActivity : AppCompatActivity() {
             }
             else if(newChar == "Steps"){
                 binding.tvStepsValue.text = newCharValue.toString()
+                stopService(charServiceIntent)
             }
 
         }
     }
 
-    private fun startTimer() {
-        serviceIntent.putExtra(MainService.TIME_EXTRA, System.currentTimeMillis())
-        startService(serviceIntent)
-        timerStarted = true
+    private val updateActiveTime: BroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            timeOfActivity = intent.getDoubleExtra(ActiveTimeService.ACTIVE_EXTRA, 0.0)
+            binding.tvActTimeValue.text = getTimeStringFromDouble(timeOfActivity)
+        }
     }
 
-    private fun resetTimer() {
-        stopService(serviceIntent)
-        binding.tvLastActValue.text = "Live"
-        timerStarted = false
+    private fun getTimeStringFromDouble(time: Double): String {
+        val resultInt = time.roundToInt()
+        val hours = resultInt%86400/3600
+        val minutes = resultInt%86400 % 3600 /60
+        val seconds = resultInt % 86400 % 3600 % 3600 %60
 
+        return makeTimeString(hours, minutes, seconds)
+    }
+
+    private fun makeTimeString(hours: Int, minutes: Int, seconds: Int): String = "${hours}h ${minutes}min ${seconds}s"
+
+    private fun startActiveTimer(){
+        activeServiceIntent.putExtra(ActiveTimeService.ACTIVE_EXTRA, timeOfActivity)
+        startService(activeServiceIntent)
+        //timerStarted = true
+    }
+
+    private fun stopActiveTimer(){
+        stopService(activeServiceIntent)
     }
 
     private fun updateActivity(charName: String?, charValue: String){
@@ -260,8 +281,12 @@ class HomeActivity : AppCompatActivity() {
 
     private fun updateUiDecks(charName: String?) {
         tvCurrActValue.text = charName.toString()
-        if ((charName.toString() != "Uncertain") || (charName.toString() != "Idle")){
+        if ((charName.toString() == "Running") || (charName.toString() == "Walking")|| (charName.toString() == "Stairs")){
             tvLastActValue.text = "Live"
+            startActiveTimer() // Start activity stopwatch
+        }
+        else if ((charName.toString() == "Uncertain") || (charName.toString() == "Idle") || (charName.toString() == "Fall")){
+            stopActiveTimer() // Stop activity stopwatch
         }
 
         if(charName.toString() == "Fall"){
