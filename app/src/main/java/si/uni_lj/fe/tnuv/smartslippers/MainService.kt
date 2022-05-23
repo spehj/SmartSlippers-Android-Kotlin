@@ -95,6 +95,7 @@ class MainService : Service() {
         var IS_ACTIVITY_RUNNING = false
         var IS_FIRST_TIME = true
 
+
     }
 
 

@@ -19,6 +19,8 @@ class CharacteristicsService : Service() {
         const val CHAR_UPDATED = "charUpdated"
         const val CHAR_EXTRA = "charExtra"
         const val CHAR_VALUE = "charValue"
+        const val STEPS_VALUE = "stepsValue"
+        var stepsCounter = 0
         var IS_ACTIVITY_RUNNING = false
         var IS_FIRST_TIME = true
 
@@ -35,8 +37,9 @@ class CharacteristicsService : Service() {
         if (extras != null) {
             val characteristicsName = extras?.getString(CHAR_EXTRA)
             val characteristicsValue = extras?.getString(CHAR_VALUE)
+            var charNumSteps = extras?.getInt(STEPS_VALUE, 0)
 
-            getNewValues(characteristicsName, characteristicsValue)
+            getNewValues(characteristicsName, characteristicsValue, charNumSteps)
 
         }
 
@@ -68,9 +71,10 @@ class CharacteristicsService : Service() {
     }
 
     // Function that catch new values from Arduino Nano 33 BLE
-    private fun getNewValues(charName: String?, charValue: String?) {
+    private fun getNewValues(charName: String?, charValue: String?, numSteps: Int) {
         val intent = Intent(CHAR_UPDATED)
-        Log.i("CHARSERV", "get char called.")
+        var charNumSteps = numSteps
+        //Log.i("CHARSERV", "get char called.")
         when (charName) {
             "Walking" -> {
                 //this.tvHojaValue.text = charValue.toString()
@@ -170,17 +174,14 @@ class CharacteristicsService : Service() {
             }
 
             "Steps" -> {
-                //this.tvUncertainValue.text = charValue.toString()
-
-                //updateUiDecks(charName)
-                //startTimer()
+                stepsCounter+= charValue?.toInt()!!
                 val extras = Bundle().apply {
                     putString(CHAR_EXTRA, charName)
                     putString(CHAR_VALUE, charValue)
+                    putInt(STEPS_VALUE, stepsCounter)
                 }
                 intent.putExtras(extras)
                 sendBroadcast(intent)
-                Log.i("CHARSERV", "Steps: $charValue")
                 //lastActivityTime = System.currentTimeMillis()
 
                 //hojaActivity.stop() // added1

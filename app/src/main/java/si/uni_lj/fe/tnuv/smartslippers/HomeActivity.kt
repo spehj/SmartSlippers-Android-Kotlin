@@ -28,8 +28,11 @@ import kotlin.math.roundToInt
 
 
 class HomeActivity : AppCompatActivity() {
+
     private var timeLastActServ: String? = ""
     private var timeOfActivity = 0.0
+    private var numOfSteps = 0
+    private var activityName = ""
     private val CHANNEL_ID = "channel_id_example_id_2"
     private val notificationId = 102
     private lateinit var device: BluetoothDevice
@@ -100,6 +103,14 @@ class HomeActivity : AppCompatActivity() {
         setContentView(binding.root)
         //setContentView(R.layout.home_activity) // Old way
 
+        //tvHojaValue = findViewById(R.id.)
+        tvCurrActValue = findViewById(R.id.tvCurrActValue)
+        tvLastActValue = findViewById(R.id.tvLastActValue)
+        tvActTimeValue = findViewById(R.id.tvActTimeValue)
+        tvStatusValue = findViewById(R.id.tvStatusValue)
+        tvConnStatusIndicator = findViewById(R.id.tvConnStatusIndicator)
+        tvConnStatusText = findViewById(R.id.tvConnStatusText)
+
         if (!MainService.IS_ACTIVITY_RUNNING) {
 
             Log.i("SERVICE", "Starting MainService")
@@ -113,9 +124,7 @@ class HomeActivity : AppCompatActivity() {
         activeServiceIntent = Intent(applicationContext, ActiveTimeService::class.java)
 
 
-        registerReceiver(updateTime, IntentFilter(MainService.TIMER_UPDATED))
-        registerReceiver(updateCurrentActivity, IntentFilter(CharacteristicsService.CHAR_UPDATED))
-        registerReceiver(updateActiveTime, IntentFilter(ActiveTimeService.ACTIVE_UPDATED))
+
 
         supportActionBar?.hide()
         characteristicMap.put("05ed8326-b407-11ec-b909-0242ac120002", "Walking")
@@ -142,17 +151,20 @@ class HomeActivity : AppCompatActivity() {
             ConnectionManager.enableNotifications(device, characteristics[7])
             ConnectionManager.enableNotifications(device, characteristics[8])
             ConnectionManager.enableNotifications(device, characteristics[9])
+            registerReceiver(updateTime, IntentFilter(MainService.TIMER_UPDATED))
+            registerReceiver(updateCurrentActivity, IntentFilter(CharacteristicsService.CHAR_UPDATED))
+            registerReceiver(updateActiveTime, IntentFilter(ActiveTimeService.ACTIVE_UPDATED))
+            binding.tvActTimeValue.text = "0h 0min 0s"
             IS_FIRST_TIME = false
+        }else{
+            initialCharacteristicsRead()
+            refreshValues()
+            Log.i("RES", "READ AGAIN")
+
         }
 
 
-        //tvHojaValue = findViewById(R.id.)
-        tvCurrActValue = findViewById(R.id.tvCurrActValue)
-        tvLastActValue = findViewById(R.id.tvLastActValue)
-        tvActTimeValue = findViewById(R.id.tvActTimeValue)
-        tvStatusValue = findViewById(R.id.tvStatusValue)
-        tvConnStatusIndicator = findViewById(R.id.tvConnStatusIndicator)
-        tvConnStatusText = findViewById(R.id.tvConnStatusText)
+
 
         // Set initial BLE status indicator and text
         if (device.isConnected()) {
@@ -189,17 +201,48 @@ class HomeActivity : AppCompatActivity() {
         }
 
 
-        // Initial read of characteristics
-        readCharacteristic(device, characteristics[3])
-        readCharacteristic(device, characteristics[4])
-        readCharacteristic(device, characteristics[5])
-        readCharacteristic(device, characteristics[6])
-        readCharacteristic(device, characteristics[7])
-        readCharacteristic(device, characteristics[8])
-        readCharacteristic(device, characteristics[9])
+                // Updating Text View at current
+                // iteration
 
 
 
+
+                // Thread sleep for 1 sec
+                //Thread.sleep(1000)
+
+
+
+
+
+
+
+
+
+
+
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+        initialCharacteristicsRead()
+        //refreshValues()
+        Log.i("RES", "RESUMED")
+    }
+
+    private fun refreshValues(){
+        // Last activity
+        binding.tvLastActValue.text = timeLastActServ
+        Log.i("RES", "RESUMED last act: $timeLastActServ")
+        // Number of steps
+        binding.tvStepsValue.text = numOfSteps.toString()
+        Log.i("RES", "RESUMED steps: ${numOfSteps.toString()}")
+        // Current activity
+        binding.tvCurrActValue.text = activityName
+        Log.i("RES", "RESUMED current act: $activityName")
+        // Active time
+        binding.tvActTimeValue.text = getTimeStringFromDouble(timeOfActivity)
+        Log.i("RES", "RESUMED active time: ${getTimeStringFromDouble(timeOfActivity)}")
 
     }
 
@@ -207,7 +250,14 @@ class HomeActivity : AppCompatActivity() {
         override fun onReceive(context: Context, intent: Intent) {
             timeLastActServ = intent.getStringExtra(MainService.TIME_EXTRA)
             Log.i("CHARSERV", "Time from last activity: $timeLastActServ")
+
+
             binding.tvLastActValue.text = timeLastActServ
+
+
+
+
+            Log.i("CHARSERV", "Time from last activity slide: ${binding.tvLastActValue.text}")
         }
     }
 
@@ -217,23 +267,33 @@ class HomeActivity : AppCompatActivity() {
             val extras = intent.extras
             var newChar : String? = ""
             var newCharValue : String? = ""
+            //var newStepsValue : Int = 0
             if (extras != null) {
                 newChar = extras?.getString(CharacteristicsService.CHAR_EXTRA)
                 newCharValue = extras?.getString(CharacteristicsService.CHAR_VALUE)
+                numOfSteps = extras?.getInt(CharacteristicsService.STEPS_VALUE)
+
             }
             //val newChar = intent.getStringExtra(MainService.CHAR_EXTRA)
             Log.i("CHARSERV", "New value of char: $newChar")
             if (newChar != "Steps"){
                 binding.tvCurrActValue.text = newChar
+                activityName = newChar.toString()
                 updateUiDecks(newChar)
                 stopService(charServiceIntent)
             }
             else if(newChar == "Steps"){
-                binding.tvStepsValue.text = newCharValue.toString()
+                Log.i("CHARSERV", "Number of steps: ${numOfSteps.toString()}")
+                //newCharValue?.toInt()?.let { countSteps(it) }
+                binding.tvStepsValue.text = numOfSteps.toString()
                 stopService(charServiceIntent)
             }
 
         }
+    }
+
+    private fun countSteps(newSteps : Int){
+        numOfSteps += newSteps
     }
 
     private val updateActiveTime: BroadcastReceiver = object : BroadcastReceiver() {
@@ -301,6 +361,17 @@ class HomeActivity : AppCompatActivity() {
             tvStatusValue.text = "EVERYTHING IS GOOD"
         }
 
+    }
+
+    private fun initialCharacteristicsRead(){
+        // Initial read of characteristics
+        readCharacteristic(device, characteristics[3])
+        readCharacteristic(device, characteristics[4])
+        readCharacteristic(device, characteristics[5])
+        readCharacteristic(device, characteristics[6])
+        readCharacteristic(device, characteristics[7])
+        readCharacteristic(device, characteristics[8])
+        readCharacteristic(device, characteristics[9])
     }
 
 

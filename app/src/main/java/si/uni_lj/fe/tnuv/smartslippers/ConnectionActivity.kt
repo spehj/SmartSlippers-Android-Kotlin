@@ -113,13 +113,18 @@ class ConnectionActivity : AppCompatActivity(){
         supportActionBar?.hide()
 
         setContentView(R.layout.activity_connect)
-        // Stop services if reconnecting
+        // Stop services if reconnecting and set variables to FALSE
         serviceIntent = Intent(applicationContext, MainService::class.java)
         charServiceIntent = Intent(applicationContext, CharacteristicsService::class.java)
         activeServiceIntent = Intent(applicationContext, ActiveTimeService::class.java)
         stopService(charServiceIntent)
         stopService(serviceIntent)
         stopService(activeServiceIntent)
+        HomeActivity.IS_FIRST_TIME = true
+        CharacteristicsService.IS_ACTIVITY_RUNNING = false
+        ActiveTimeService.IS_ACTIVITY_RUNNING = false
+        MainService.IS_ACTIVITY_RUNNING = false
+
 
 
 
