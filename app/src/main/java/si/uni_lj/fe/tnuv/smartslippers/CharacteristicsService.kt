@@ -20,7 +20,9 @@ class CharacteristicsService : Service() {
         const val CHAR_EXTRA = "charExtra"
         const val CHAR_VALUE = "charValue"
         const val STEPS_VALUE = "stepsValue"
+        var lastActivityName = ""
         var stepsCounter = 0
+        var lastStepsCounter = 0
         var IS_ACTIVITY_RUNNING = false
         var IS_FIRST_TIME = true
 
@@ -79,6 +81,7 @@ class CharacteristicsService : Service() {
             "Walking" -> {
                 //this.tvHojaValue.text = charValue.toString()
                 if (charValue == "1") {
+                    lastActivityName = charName
                     val extras = Bundle().apply {
                         putString(CHAR_EXTRA, charName)
                         putString(CHAR_VALUE, charValue)
@@ -99,6 +102,7 @@ class CharacteristicsService : Service() {
                 //this.tvIdleValue.text = charValue.toString()
                 if (charValue == "1") {
                     //updateUiDecks(charName)
+                    lastActivityName = charName
                     startTimer()
                     val extras = Bundle().apply {
                         putString(CHAR_EXTRA, charName)
@@ -113,6 +117,7 @@ class CharacteristicsService : Service() {
                 //this.tvStopniceValue.text = charValue.toString()
                 if (charValue == "1") {
                     //updateUiDecks(charName)
+                    lastActivityName = charName
                     resetTimer()
                     val extras = Bundle().apply {
                         putString(CHAR_EXTRA, charName)
@@ -128,6 +133,7 @@ class CharacteristicsService : Service() {
                 //this.tvDvigaloValue.text = charValue.toString()
                 if (charValue == "1") {
                     //updateUiDecks(charName)
+                    lastActivityName = charName
                     resetTimer()
                     val extras = Bundle().apply {
                         putString(CHAR_EXTRA, charName)
@@ -144,7 +150,7 @@ class CharacteristicsService : Service() {
                     //updateUiDecks(charName)
                     startTimer()
                     val extras = Bundle().apply {
-                        putString(CHAR_EXTRA, charName)
+                        putString(CHAR_EXTRA, lastActivityName)
                         putString(CHAR_VALUE, charValue)
                     }
                     intent.putExtras(extras)
@@ -174,17 +180,18 @@ class CharacteristicsService : Service() {
             }
 
             "Steps" -> {
-                stepsCounter+= charValue?.toInt()!!
-                val extras = Bundle().apply {
-                    putString(CHAR_EXTRA, charName)
-                    putString(CHAR_VALUE, charValue)
-                    putInt(STEPS_VALUE, stepsCounter)
+                if (charValue?.toInt()!! > 0){
+                    Log.i("STEPS", "New steps: ${charValue?.toInt()!!} : ${charValue}")
+                    stepsCounter+= charValue?.toInt()!!
+                    val extras = Bundle().apply {
+                        putString(CHAR_EXTRA, charName)
+                        putString(CHAR_VALUE, charValue)
+                        putInt(STEPS_VALUE, stepsCounter)
+                    }
+                    intent.putExtras(extras)
+                    sendBroadcast(intent)
                 }
-                intent.putExtras(extras)
-                sendBroadcast(intent)
-                //lastActivityTime = System.currentTimeMillis()
 
-                //hojaActivity.stop() // added1
 
             }
 

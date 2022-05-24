@@ -153,6 +153,7 @@ class HomeActivity : AppCompatActivity() {
             ConnectionManager.enableNotifications(device, characteristics[9])
 
             binding.tvActTimeValue.text = "0h 0min 0s"
+            binding.tvStepsValue.text = "0"
             IS_FIRST_TIME = false
         }else{
             initialCharacteristicsRead()
@@ -246,7 +247,7 @@ class HomeActivity : AppCompatActivity() {
         Log.i("RES", "RESUMED last act: $timeLastActServ")
         // Number of steps
         binding.tvStepsValue.text = numOfSteps.toString()
-        Log.i("RES", "RESUMED steps: ${numOfSteps.toString()}")
+        Log.i("RES", "RESUMED steps: ${numOfSteps}")
         // Current activity
         binding.tvCurrActValue.text = activityName
         Log.i("RES", "RESUMED current act: $activityName")
@@ -375,7 +376,7 @@ class HomeActivity : AppCompatActivity() {
         readCharacteristic(device, characteristics[6])
         readCharacteristic(device, characteristics[7])
         readCharacteristic(device, characteristics[8])
-        readCharacteristic(device, characteristics[9])
+        //readCharacteristic(device, characteristics[9])
     }
 
 
