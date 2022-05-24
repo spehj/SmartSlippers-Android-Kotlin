@@ -11,7 +11,7 @@ class ActiveTimeService : Service() {
     companion object{
         const val ACTIVE_UPDATED = "activeUpdated"
         const val ACTIVE_EXTRA = "activeExtra"
-
+        var activeTime : Double = 0.0
         var IS_ACTIVITY_RUNNING = false
     }
 
@@ -24,13 +24,14 @@ class ActiveTimeService : Service() {
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         val time = intent.getDoubleExtra(ACTIVE_EXTRA, 0.0)
         if (!IS_ACTIVITY_RUNNING) {
-            timer.scheduleAtFixedRate(TimeTask(time), 0, 1000)
+            timer.scheduleAtFixedRate(TimeTask(activeTime), 0, 1000)
             IS_ACTIVITY_RUNNING = true
         }
         return START_NOT_STICKY
     }
 
     override fun onDestroy() {
+        //activeTime = 0.0
         timer.cancel()
         timer.purge()
         super.onDestroy()

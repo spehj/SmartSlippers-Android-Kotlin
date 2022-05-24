@@ -51,6 +51,9 @@ dependencies {
     implementation 'com.jakewharton.timber:timber:4.7.1'
     implementation 'androidx.work:work-runtime-ktx:2.7.1'
     implementation 'com.jakewharton:butterknife:10.2.3'
+    apply plugin: 'kotlin-android'
+    apply plugin: 'kotlin-android-extensions'
+
 
 
 

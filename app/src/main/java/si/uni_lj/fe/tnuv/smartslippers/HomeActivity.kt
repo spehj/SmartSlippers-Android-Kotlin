@@ -151,17 +151,18 @@ class HomeActivity : AppCompatActivity() {
             ConnectionManager.enableNotifications(device, characteristics[7])
             ConnectionManager.enableNotifications(device, characteristics[8])
             ConnectionManager.enableNotifications(device, characteristics[9])
-            registerReceiver(updateTime, IntentFilter(MainService.TIMER_UPDATED))
-            registerReceiver(updateCurrentActivity, IntentFilter(CharacteristicsService.CHAR_UPDATED))
-            registerReceiver(updateActiveTime, IntentFilter(ActiveTimeService.ACTIVE_UPDATED))
+
             binding.tvActTimeValue.text = "0h 0min 0s"
             IS_FIRST_TIME = false
         }else{
             initialCharacteristicsRead()
             refreshValues()
-            Log.i("RES", "READ AGAIN")
+            Log.i("RES", "Activ time. ${binding.tvActTimeValue.text}")
 
         }
+        registerReceiver(updateTime, IntentFilter(MainService.TIMER_UPDATED))
+        registerReceiver(updateCurrentActivity, IntentFilter(CharacteristicsService.CHAR_UPDATED))
+        registerReceiver(updateActiveTime, IntentFilter(ActiveTimeService.ACTIVE_UPDATED))
 
 
 
@@ -230,6 +231,15 @@ class HomeActivity : AppCompatActivity() {
         Log.i("RES", "RESUMED")
     }
 
+    override fun onPause() {
+        super.onPause()
+        // Unregister receivers
+        unregisterReceiver(updateTime)
+        unregisterReceiver(updateCurrentActivity)
+        unregisterReceiver(updateActiveTime)
+        Log.i("CHARSERV", "Receivers unregisted.")
+    }
+
     private fun refreshValues(){
         // Last activity
         binding.tvLastActValue.text = timeLastActServ
@@ -249,15 +259,9 @@ class HomeActivity : AppCompatActivity() {
     private val updateTime: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             timeLastActServ = intent.getStringExtra(MainService.TIME_EXTRA)
-            Log.i("CHARSERV", "Time from last activity: $timeLastActServ")
-
-
+            //Log.i("CHARSERV", "Time from last activity: $timeLastActServ")
             binding.tvLastActValue.text = timeLastActServ
-
-
-
-
-            Log.i("CHARSERV", "Time from last activity slide: ${binding.tvLastActValue.text}")
+            //Log.i("CHARSERV", "Time from last activity slide: ${binding.tvLastActValue.text}")
         }
     }
 
@@ -452,8 +456,8 @@ class HomeActivity : AppCompatActivity() {
                 runOnUiThread {
 
                     //tvConnStatusIndicator.setBackgroundColor(Color.parseColor("#CB1A5E"))
-                    tvConnStatusIndicator.setBackgroundResource(R.drawable.status_led_disconnected);
-                    tvConnStatusText.text = "Slippers Disconnected"
+                    binding.tvConnStatusIndicator.setBackgroundResource(R.drawable.status_led_disconnected);
+                    binding.tvConnStatusText.text = "Slippers Disconnected"
 
 
                     /*
