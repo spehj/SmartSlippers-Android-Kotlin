@@ -8,11 +8,17 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:orientation="vertical"
-    tools:context=".HomeActivity">
+    tools:context=".HomeActivity"
+
+    >
 
     <RelativeLayout
+        android:id="@+id/relativeLayout2"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
             android:layout_width="match_parent"
@@ -40,15 +46,17 @@
             android:textStyle="bold" />
     </RelativeLayout>
 
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
+        android:layout_height="wrap_content"
+        android:layout_weight="1">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:context=".BleOperationsActivity">
+            android:layout_marginTop="0dp"
+            android:paddingBottom="60dp"
+            app:layout_constraintTop_toBottomOf="@+id/relativeLayout2">
 
             <TextView
                 android:id="@+id/tvCurrActValue"
@@ -101,7 +109,7 @@
                 android:layout_width="160dp"
                 android:layout_height="34dp"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="240dp"
+                android:layout_marginTop="272dp"
                 android:text="Current Activity"
                 android:textAlignment="center"
                 android:textColor="@color/textsBlack"
@@ -111,8 +119,8 @@
 
             <TextView
                 android:id="@+id/tvLastActValue"
-                android:layout_width="161dp"
-                android:layout_height="68dp"
+                android:layout_width="160dp"
+                android:layout_height="60dp"
                 android:layout_marginTop="8dp"
                 android:background="@drawable/input_background"
                 android:gravity="center"
@@ -139,6 +147,33 @@
                 app:layout_constraintBottom_toBottomOf="@+id/tvCurrActValue"
                 app:layout_constraintStart_toStartOf="@+id/tvActTimeText"
                 app:layout_constraintTop_toTopOf="@+id/tvCurrActValue"
+                tools:text="No activity yet" />
+
+            <TextView
+                android:id="@+id/tvStepsText"
+                android:layout_width="160dp"
+                android:layout_height="34dp"
+                android:text="Steps Counter"
+                android:textAlignment="center"
+                android:textColor="@color/textsBlack"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toBottomOf="@+id/tvLastActText"
+                app:layout_constraintEnd_toEndOf="@+id/tvActTimeText"
+                app:layout_constraintTop_toTopOf="@+id/tvLastActText" />
+
+            <TextView
+                android:id="@+id/tvStepsValue"
+                android:layout_width="160dp"
+                android:layout_height="60dp"
+                android:background="@drawable/input_background"
+                android:gravity="center"
+                android:textAlignment="center"
+                android:textColor="@color/inputBela"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/tvLastActValue"
+                app:layout_constraintEnd_toEndOf="@+id/tvActTimeValue"
+                app:layout_constraintTop_toTopOf="@+id/tvLastActValue"
                 tools:text="No activity yet" />
 
             <TextView
@@ -208,50 +243,7 @@
                 app:layout_constraintTop_toTopOf="@+id/tvConnStatusIndicator" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/settingsBtn"
-            android:layout_width="0dp"
-            android:layout_height="60dp"
-            android:layout_gravity="bottom"
-            android:layout_weight="1"
-            android:background="@drawable/toolbar_levo"
-            android:fontFamily="@font/encodesansmedium"
-            android:text="SETTINGS"
-            android:textColor="@color/white"
-            android:textSize="10sp"
-            android:textStyle="bold" />
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/homeBtn"
-            android:layout_width="0dp"
-            android:layout_height="60dp"
-            android:layout_gravity="bottom"
-            android:layout_weight="1"
-            android:background="@drawable/toolbar_middle"
-            android:fontFamily="@font/encodesansmedium"
-            android:text="HOME"
-            android:textColor="@color/white"
-            android:textSize="10sp"
-            android:textStyle="bold" />
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/statsBtn"
-            android:layout_width="0dp"
-            android:layout_height="60dp"
-            android:layout_gravity="bottom"
-            android:layout_weight="1"
-            android:background="@drawable/toolbar_right"
-            android:fontFamily="@font/encodesansmedium"
-            android:text="STATS"
-            android:textColor="@color/white"
-            android:textSize="10sp"
-            android:textStyle="bold" />
-    </LinearLayout>
+    <include layout="@layout/bottom_menu"></include>
 </LinearLayout>

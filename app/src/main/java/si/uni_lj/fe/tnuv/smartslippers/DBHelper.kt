@@ -6,6 +6,7 @@ import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import android.widget.Toast
 
 class DBHelper(context: Context, factory: SQLiteDatabase.CursorFactory?) :
     SQLiteOpenHelper(context, DATABASE_NAME, factory, DATABASE_VERSION) {
@@ -19,7 +20,8 @@ class DBHelper(context: Context, factory: SQLiteDatabase.CursorFactory?) :
                 "fname" + " TEXT," +
                 "lname" + " TEXT," +
                 "email" + " TEXT," +
-                "password" + " TEXT" + ")")
+                "password" + " TEXT," +
+                "phone" + " TEXT" + ")")
 
         // we are calling sqlite
         // method for executing our query
@@ -38,6 +40,7 @@ class DBHelper(context: Context, factory: SQLiteDatabase.CursorFactory?) :
         // below we are creating
         // a content values variable
         // ContentValues() - creates empty set of values
+        val phone = "not entered yet"
         val values = ContentValues()
 
         // we are inserting our values
@@ -47,6 +50,7 @@ class DBHelper(context: Context, factory: SQLiteDatabase.CursorFactory?) :
         values.put("lname", lname)
         values.put("email", email)
         values.put("password", password)
+        values.put("phone", phone)
 
         // here we are creating a
         // writable variable of
@@ -74,29 +78,53 @@ class DBHelper(context: Context, factory: SQLiteDatabase.CursorFactory?) :
         // below code returns a cursor to
         // read data from the database
         return db.rawQuery("SELECT * FROM " + TABLE_NAME, null)
-
     }
 
     @SuppressLint("Range")
-    fun getName(id: Long): Pair<String, String> {
-        var email = "not found"
-        var password = "not found"
+    fun getName(id: Long) : Users {
+        // var email = "not found"
+        // var password = "not found"
+        // var firstName = "not found"
+        // var lastName = "not found"
+        // var id1 = "not found"
+        var user = Users()
         val db = this.writableDatabase
         val whereclause = "ID=?"
         val whereargs = arrayOf(id.toString())
         val csr: Cursor = db.query(TABLE_NAME, null, whereclause, whereargs, null, null, null)
         if (csr.moveToFirst()) {
-            email = csr.getString(csr.getColumnIndex(EMAIL_COl))
+            /*email = csr.getString(csr.getColumnIndex(EMAIL_COl))
             password = csr.getString(csr.getColumnIndex(PASSWORD_COl))
+            firstName = csr.getString(csr.getColumnIndex(FNAME_COl))
+            lastName = csr.getString(csr.getColumnIndex(LNAME_COl))
+            id1 = csr.getString(csr.getColumnIndex(ID_COL))*/
+            user.id = csr.getString(csr.getColumnIndex(ID_COL))
+            user.fname = csr.getString(csr.getColumnIndex(FNAME_COl))
+            user.lname = csr.getString(csr.getColumnIndex(LNAME_COl))
+            user.email = csr.getString(csr.getColumnIndex(EMAIL_COl))
+            user.password = csr.getString(csr.getColumnIndex(PASSWORD_COl))
+            user.phone = csr.getString(csr.getColumnIndex(PHONE_COl))
         }
-        return Pair(email, password)
+        return user
+    }
+
+    fun updatePassword(id: String?, fname: String?, lname: String?, email: String?, password : String?, phone : String?): Boolean {
+        val db = this.writableDatabase
+        val contentValues = ContentValues()
+        contentValues.put("fname", fname)
+        contentValues.put("lname", lname)
+        contentValues.put("email", email)
+        contentValues.put("password", password)
+        contentValues.put("phone", phone)
+        db.update(TABLE_NAME, contentValues, "ID = ?", arrayOf(id))
+        return true
     }
 
     companion object{
         // here we have defined variables for our database
 
         // below is variable for database name
-        private val DATABASE_NAME = "SIGNUP"
+        private val DATABASE_NAME = "IOT1"
 
         // below is the variable for database version
         private val DATABASE_VERSION = 1
@@ -116,5 +144,7 @@ class DBHelper(context: Context, factory: SQLiteDatabase.CursorFactory?) :
         val EMAIL_COl = "email"
 
         val PASSWORD_COl = "password"
+
+        val PHONE_COl = "phone"
     }
 }

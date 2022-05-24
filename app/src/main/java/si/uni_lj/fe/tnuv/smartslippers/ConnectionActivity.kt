@@ -36,6 +36,9 @@ import si.uni_lj.fe.tnuv.smartslippers.ConnectionActivity as ConnectionActivity1
 private const val ENABLE_BLUETOOTH_REQUEST_CODE = 1
 private const val LOCATION_PERMISSION_REQUEST_CODE = 2
 class ConnectionActivity : AppCompatActivity(){
+    private lateinit var serviceIntent: Intent
+    private lateinit var charServiceIntent: Intent
+    private lateinit var  activeServiceIntent: Intent
     private lateinit var scanButton: Button
     private lateinit var connectButton : Button
     private lateinit var scanResultsRecView : RecyclerView
@@ -84,10 +87,15 @@ class ConnectionActivity : AppCompatActivity(){
             with(result.device) {
                 // Dodaj da se izbrano polje obarva modro
                 scanRow = findViewById(R.id.connect_row_id)
-                scanRow.setSelected(true)
+                scanRow.isSelected = true
                 Timber.w("Connecting to $address")
                 connectButton.setOnClickListener {
                     ConnectionManager.connect(this, this@ConnectionActivity)
+                    // TUKAJ SHRANI address v bazo
+                    if (address == ""){
+                        // Pojdi naprej
+                        ConnectionManager.connect(this, this@ConnectionActivity)
+                    }
                 }
                 //ConnectionManager.connect(this, this@MainActivity)
             }
@@ -110,6 +118,19 @@ class ConnectionActivity : AppCompatActivity(){
         supportActionBar?.hide()
 
         setContentView(R.layout.activity_connect)
+        // Stop services if reconnecting and set variables to FALSE
+        serviceIntent = Intent(applicationContext, MainService::class.java)
+        charServiceIntent = Intent(applicationContext, CharacteristicsService::class.java)
+        activeServiceIntent = Intent(applicationContext, ActiveTimeService::class.java)
+        stopService(charServiceIntent)
+        stopService(serviceIntent)
+        stopService(activeServiceIntent)
+        HomeActivity.IS_FIRST_TIME = true
+        CharacteristicsService.IS_ACTIVITY_RUNNING = false
+        ActiveTimeService.IS_ACTIVITY_RUNNING = false
+        MainService.IS_ACTIVITY_RUNNING = false
+
+
 
 
         if (BuildConfig.DEBUG) {
@@ -138,7 +159,7 @@ class ConnectionActivity : AppCompatActivity(){
         connectButton = findViewById(R.id.connect_button)
         scanButton.setOnClickListener { if (isScanning) stopBleScan() else startBleScan() }
         scanResultsRecView = findViewById(R.id.scan_results_recycler_view)
-        Log.i("MainActivity", "Opened main activity")
+        //Log.i("MainActivity", "Opened main activity")
 
         setupRecyclerView()
     }
@@ -288,7 +309,7 @@ class ConnectionActivity : AppCompatActivity(){
 
     private val scanCallback = object : ScanCallback() {
         override fun onScanResult(callbackType: Int, result: ScanResult) {
-            Log.i("ConnectionActivity", " before adapter")
+            Log.i("ConnectionActivity", "Device address: ${result.device.address}")
             val indexQuery = scanResults.indexOfFirst { it.device.address == result.device.address }
             if (indexQuery != -1) { // A scan result already exists with the same address
                 scanResults[indexQuery] = result

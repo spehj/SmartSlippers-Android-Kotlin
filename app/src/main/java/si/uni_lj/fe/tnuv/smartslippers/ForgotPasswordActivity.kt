@@ -38,7 +38,7 @@ class ForgotPasswordActivity : AppCompatActivity() {
 
             val db = DBHelper(this,null)
             val cursor = db.count()
-            var x : Long = 2
+            var x : Long = 1
             cursor!!.moveToFirst()
 
             var forgottenPassword : String = "ta email ne obstaja"
@@ -47,14 +47,16 @@ class ForgotPasswordActivity : AppCompatActivity() {
 
             var enakost : Boolean = false
 
-            while(cursor.moveToNext()){
-                var (email, password) = db.getName(x)
-                if(email == enterEmail){
-                    forgottenPassword = password
+            var user = Users()
+
+            do{
+                user = db.getName(x)
+                if(user.email == enterEmail){
+                    forgottenPassword = user.password.toString()
                     enakost = true
                 }
                 x++
-            }
+            }while(cursor.moveToNext())
 
             if(TextUtils.isEmpty(enterEmail)){
                 email.error = "polje ne sme ostati prazno"
