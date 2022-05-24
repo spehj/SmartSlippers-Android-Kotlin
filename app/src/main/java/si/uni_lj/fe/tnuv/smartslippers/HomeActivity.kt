@@ -251,7 +251,7 @@ class HomeActivity : AppCompatActivity() {
         binding.tvCurrActValue.text = activityName
         Log.i("RES", "RESUMED current act: $activityName")
         // Active time
-        binding.tvActTimeValue.text = getTimeStringFromDouble(timeOfActivity)
+        binding.tvActTimeValue.text = getTimeStringFromDouble(ActiveTimeService.activeTime)
         Log.i("RES", "RESUMED active time: ${getTimeStringFromDouble(timeOfActivity)}")
 
     }
