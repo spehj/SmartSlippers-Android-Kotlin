@@ -87,10 +87,15 @@ class ConnectionActivity : AppCompatActivity(){
             with(result.device) {
                 // Dodaj da se izbrano polje obarva modro
                 scanRow = findViewById(R.id.connect_row_id)
-                scanRow.setSelected(true)
+                scanRow.isSelected = true
                 Timber.w("Connecting to $address")
                 connectButton.setOnClickListener {
                     ConnectionManager.connect(this, this@ConnectionActivity)
+                    // TUKAJ SHRANI address v bazo
+                    if (address == ""){
+                        // Pojdi naprej
+                        ConnectionManager.connect(this, this@ConnectionActivity)
+                    }
                 }
                 //ConnectionManager.connect(this, this@MainActivity)
             }
@@ -154,7 +159,7 @@ class ConnectionActivity : AppCompatActivity(){
         connectButton = findViewById(R.id.connect_button)
         scanButton.setOnClickListener { if (isScanning) stopBleScan() else startBleScan() }
         scanResultsRecView = findViewById(R.id.scan_results_recycler_view)
-        Log.i("MainActivity", "Opened main activity")
+        //Log.i("MainActivity", "Opened main activity")
 
         setupRecyclerView()
     }
@@ -304,7 +309,7 @@ class ConnectionActivity : AppCompatActivity(){
 
     private val scanCallback = object : ScanCallback() {
         override fun onScanResult(callbackType: Int, result: ScanResult) {
-            Log.i("ConnectionActivity", " before adapter")
+            Log.i("ConnectionActivity", "Device address: ${result.device.address}")
             val indexQuery = scanResults.indexOfFirst { it.device.address == result.device.address }
             if (indexQuery != -1) { // A scan result already exists with the same address
                 scanResults[indexQuery] = result

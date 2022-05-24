@@ -24,6 +24,7 @@ class ActiveTimeService : Service() {
 
     private val timer = Timer()
 
+
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         //val time = intent.getDoubleExtra(ACTIVE_EXTRA, 0.0)
         Log.i("RES", "ON START: last active time: $lastActiveTime")

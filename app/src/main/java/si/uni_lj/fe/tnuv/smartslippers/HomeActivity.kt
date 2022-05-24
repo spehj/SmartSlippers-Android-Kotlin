@@ -180,6 +180,7 @@ class HomeActivity : AppCompatActivity() {
         tvButtonReconnect = findViewById(R.id.tvButtonReconnect);
         tvButtonReconnect.setOnClickListener() {
             teardownConnection(device)
+            resetServiceValues()
             val intent1 = Intent(this, ConnectionActivity::class.java)
             startActivity(intent1)
         }
@@ -377,6 +378,30 @@ class HomeActivity : AppCompatActivity() {
         readCharacteristic(device, characteristics[7])
         readCharacteristic(device, characteristics[8])
         //readCharacteristic(device, characteristics[9])
+    }
+
+    private fun resetServiceValues(){
+        ActiveTimeService.activeTime = 0.0
+        ActiveTimeService.lastActiveTime = 0.0
+        ActiveTimeService.currentActiveTime = 0.0
+        ActiveTimeService.IS_ACTIVITY_RUNNING = false
+
+        MainService.IS_ACTIVITY_RUNNING = false
+        MainService.IS_FIRST_TIME = true
+
+        CharacteristicsService.lastActivityName = ""
+        CharacteristicsService.stepsCounter = 0
+        CharacteristicsService.IS_ACTIVITY_RUNNING = false
+        CharacteristicsService.IS_FIRST_TIME = true
+
+
+
+
+
+
+
+
+
     }
 
 

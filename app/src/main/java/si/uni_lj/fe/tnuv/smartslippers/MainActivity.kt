@@ -1,6 +1,7 @@
 package si.uni_lj.fe.tnuv.smartslippers
 
 import android.Manifest
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
@@ -11,9 +12,7 @@ import android.text.TextUtils
 import android.util.Log
 import android.view.View
 import android.view.Window
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
+import android.widget.*
 import androidx.annotation.RequiresApi
 
 private const val ENABLE_BLUETOOTH_REQUEST_CODE = 1
@@ -21,6 +20,8 @@ private const val LOCATION_PERMISSION_REQUEST_CODE = 2
 private const val BLUETOOTH_PERMISSION_REQUEST_CODE = 9999
 class MainActivity : AppCompatActivity() {
 
+    var userPravilni = Users()
+    var login : Int? = null
 
     // main function
     @RequiresApi(Build.VERSION_CODES.M)
@@ -41,7 +42,7 @@ class MainActivity : AppCompatActivity() {
         //checkPermissions(this, this)
         initializeBluetoothOrRequestPermission()
 
-
+        loadData()
         val loginButton = findViewById<Button>(R.id.loginButton)
         val email = findViewById<EditText>(R.id.email)
         val password = findViewById<EditText>(R.id.password)
@@ -49,10 +50,16 @@ class MainActivity : AppCompatActivity() {
         val forgotPassword = findViewById<TextView>(R.id.forgotPassword)
         val notEmail = findViewById<TextView>(R.id.notEmail)
         val notPassword = findViewById<TextView>(R.id.notPassword)
+        val checkBox = findViewById<CheckBox>(R.id.checkbox)
 
         // set opacity of text to 0 (invisible)
         notEmail.alpha = 0.0f
         notPassword.alpha = 0.0f
+
+        if(login == 1){
+            val intent = Intent(this, ConnectionActivity::class.java)
+            startActivity(intent)
+        }
 
         forgotPassword.setOnClickListener {
             val intent = Intent(this, ForgotPasswordActivity::class.java)
@@ -68,30 +75,30 @@ class MainActivity : AppCompatActivity() {
 
             val cursor = db.count()
 
-            var x : Long = 2
+            var x : Long = 1
 
             cursor!!.moveToFirst()
 
             var enakostEmail : Boolean = false
             var enakostPassword : Boolean = false
 
-            while(cursor.moveToNext()) {
+            do {
 
-                var (emailLogin, passwordLogin) = db.getName(x)
+                var user = Users()
+                user = db.getName(x)
 
-                // Toast.makeText(this, "$emailLogin", Toast.LENGTH_LONG).show()
-
-                if(email1 == emailLogin){
+                if(email1 == user.email){
                     enakostEmail = true
+                    // Toast.makeText(this, "$IDlogin", Toast.LENGTH_LONG).show()
                 }
 
-                if(email1 == emailLogin && password1 == passwordLogin){
+                if(email1 == user.email && password1 == user.password){
                     enakostPassword = true
+                    userPravilni = user
                 }
-                // Toast.makeText(this, "email:$emailLogin, $email1, p: $passwordLogin, $password1", Toast.LENGTH_SHORT).show()
-
                 x++
             }
+            while(cursor.moveToNext())
 
             // at last we close our cursor
             cursor.close()
@@ -150,6 +157,13 @@ class MainActivity : AppCompatActivity() {
             }
             else {
                 val intent = Intent(this, ConnectionActivity::class.java)
+                if(checkBox.isChecked){
+                    checkBox.setChecked(true)
+                    login = 1
+                }else{
+                    login = 2
+                }
+                saveData()
                 startActivity(intent)
             }
         }
@@ -179,6 +193,31 @@ class MainActivity : AppCompatActivity() {
         } else {
             requestPermissions(missingPermissions.toTypedArray(), BLUETOOTH_PERMISSION_REQUEST_CODE)
         }
+    }
+
+    private fun saveData(){
+
+        val userID = userPravilni.id
+
+        val sharedPrefereces = getSharedPreferences("sharedPrefs", Context.MODE_PRIVATE)
+        val editor = sharedPrefereces.edit()
+        var login1 = login!!.toInt()
+        editor.apply {
+            putString("STRING_KEY", userID)
+            putInt("INT_KEY", login1)
+        }.apply()
+    }
+
+    private fun loadData() {
+        val sharedPrefereces = getSharedPreferences("sharedPrefs", Context.MODE_PRIVATE)
+        val savedString = sharedPrefereces.getString("STRING_KEY", null)
+        val savedInt = sharedPrefereces.getInt("INT_KEY", 2)
+
+        userPravilni.id = savedString
+        login = savedInt
+
+        Toast.makeText(this, "${userPravilni.id}, $login", Toast.LENGTH_SHORT).show()
+
     }
 
 
