@@ -21,7 +21,8 @@ class DBHelper(context: Context, factory: SQLiteDatabase.CursorFactory?) :
                 "lname" + " TEXT," +
                 "email" + " TEXT," +
                 "password" + " TEXT," +
-                "phone" + " TEXT" + ")")
+                "phone" + " TEXT," +
+                "mac" + " TEXT" + ")")
 
         // we are calling sqlite
         // method for executing our query
@@ -41,6 +42,7 @@ class DBHelper(context: Context, factory: SQLiteDatabase.CursorFactory?) :
         // a content values variable
         // ContentValues() - creates empty set of values
         val phone = "not entered yet"
+        val mac = "none"
         val values = ContentValues()
 
         // we are inserting our values
@@ -51,6 +53,7 @@ class DBHelper(context: Context, factory: SQLiteDatabase.CursorFactory?) :
         values.put("email", email)
         values.put("password", password)
         values.put("phone", phone)
+        values.put("mac", mac)
 
         // here we are creating a
         // writable variable of
@@ -82,49 +85,42 @@ class DBHelper(context: Context, factory: SQLiteDatabase.CursorFactory?) :
 
     @SuppressLint("Range")
     fun getName(id: Long) : Users {
-        // var email = "not found"
-        // var password = "not found"
-        // var firstName = "not found"
-        // var lastName = "not found"
-        // var id1 = "not found"
         var user = Users()
         val db = this.writableDatabase
         val whereclause = "ID=?"
         val whereargs = arrayOf(id.toString())
         val csr: Cursor = db.query(TABLE_NAME, null, whereclause, whereargs, null, null, null)
         if (csr.moveToFirst()) {
-            /*email = csr.getString(csr.getColumnIndex(EMAIL_COl))
-            password = csr.getString(csr.getColumnIndex(PASSWORD_COl))
-            firstName = csr.getString(csr.getColumnIndex(FNAME_COl))
-            lastName = csr.getString(csr.getColumnIndex(LNAME_COl))
-            id1 = csr.getString(csr.getColumnIndex(ID_COL))*/
             user.id = csr.getString(csr.getColumnIndex(ID_COL))
             user.fname = csr.getString(csr.getColumnIndex(FNAME_COl))
             user.lname = csr.getString(csr.getColumnIndex(LNAME_COl))
             user.email = csr.getString(csr.getColumnIndex(EMAIL_COl))
             user.password = csr.getString(csr.getColumnIndex(PASSWORD_COl))
             user.phone = csr.getString(csr.getColumnIndex(PHONE_COl))
+            user.mac = csr.getString(csr.getColumnIndex(MAC_COl))
         }
         return user
     }
 
-    fun updatePassword(id: String?, fname: String?, lname: String?, email: String?, password : String?, phone : String?): Boolean {
+    fun updateMac(user : Users): Boolean {
         val db = this.writableDatabase
         val contentValues = ContentValues()
-        contentValues.put("fname", fname)
-        contentValues.put("lname", lname)
-        contentValues.put("email", email)
-        contentValues.put("password", password)
-        contentValues.put("phone", phone)
-        db.update(TABLE_NAME, contentValues, "ID = ?", arrayOf(id))
+        contentValues.put("fname", user.fname)
+        contentValues.put("lname", user.lname)
+        contentValues.put("email", user.email)
+        contentValues.put("password", user.password)
+        contentValues.put("phone", user.phone)
+        contentValues.put("mac", user.mac)
+        db.update(TABLE_NAME, contentValues, "ID = ?", arrayOf(user.id))
         return true
     }
+
 
     companion object{
         // here we have defined variables for our database
 
         // below is variable for database name
-        private val DATABASE_NAME = "IOT1"
+        private val DATABASE_NAME = "IOT2"
 
         // below is the variable for database version
         private val DATABASE_VERSION = 1
@@ -146,5 +142,8 @@ class DBHelper(context: Context, factory: SQLiteDatabase.CursorFactory?) :
         val PASSWORD_COl = "password"
 
         val PHONE_COl = "phone"
+
+        val MAC_COl = "mac"
     }
 }
+

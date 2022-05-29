@@ -43,6 +43,10 @@ class ConnectionActivity : AppCompatActivity(){
     private lateinit var connectButton : Button
     private lateinit var scanResultsRecView : RecyclerView
     private  lateinit var scanRow: ConstraintLayout
+    var userPravilni = Users()
+    var login : Int?=null
+    var user = Users()
+    val db = DBHelper(this, null)
 
     /*******************************************
      * Properties
@@ -92,10 +96,9 @@ class ConnectionActivity : AppCompatActivity(){
                 connectButton.setOnClickListener {
                     ConnectionManager.connect(this, this@ConnectionActivity)
                     // TUKAJ SHRANI address v bazo
-                    if (address == ""){
-                        // Pojdi naprej
-                        ConnectionManager.connect(this, this@ConnectionActivity)
-                    }
+                    user.mac = address.toString()
+                    db.updateMac(user)
+
                 }
                 //ConnectionManager.connect(this, this@MainActivity)
             }
@@ -129,6 +132,13 @@ class ConnectionActivity : AppCompatActivity(){
         CharacteristicsService.IS_ACTIVITY_RUNNING = false
         ActiveTimeService.IS_ACTIVITY_RUNNING = false
         MainService.IS_ACTIVITY_RUNNING = false
+
+        loadData()
+
+
+
+        var x = userPravilni.id!!.toLong()
+        user = db.getName(x)
 
 
 
@@ -193,6 +203,18 @@ class ConnectionActivity : AppCompatActivity(){
      * Private functions
      *******************************************/
 
+    private fun loadData() {
+        val sharedPrefereces = getSharedPreferences("sharedPrefs", Context.MODE_PRIVATE)
+        val savedString = sharedPrefereces.getString("STRING_KEY", null)
+        val savedInt = sharedPrefereces.getInt("INT_KEY", 2)
+
+        userPravilni.id = savedString
+        login = savedInt
+
+        Toast.makeText(this, "${userPravilni.id}, $login", Toast.LENGTH_SHORT).show()
+
+    }
+
 
     private fun promptEnableBluetooth() {
         if (!bluetoothAdapter.isEnabled) {
@@ -223,6 +245,7 @@ class ConnectionActivity : AppCompatActivity(){
         } else {
             Log.i("ConnectionActivity", "Starting to SCAN")
             Toast.makeText(this@ConnectionActivity, "Searching for devices", Toast.LENGTH_SHORT).show()
+            Log.i("ConnectionActivity", "Scanning for FUN")
             //Timber.i("Starting TO SCAN")
             val scanFilters : List<ScanFilter>
             scanFilters = ArrayList()

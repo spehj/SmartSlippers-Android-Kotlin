@@ -393,15 +393,6 @@ class HomeActivity : AppCompatActivity() {
         CharacteristicsService.stepsCounter = 0
         CharacteristicsService.IS_ACTIVITY_RUNNING = false
         CharacteristicsService.IS_FIRST_TIME = true
-
-
-
-
-
-
-
-
-
     }
 
 

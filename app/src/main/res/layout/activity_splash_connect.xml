@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- This a "Splash Screen" XML file, here all the text view, Image view are laid in a linearly fashion inside the Linear layout. The reason of linear layout is for accurately placing the logo and the progress bar without happen to use the constraints -->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/ozadjeModra">
+
+
+    <ImageView
+        android:layout_width="155dp"
+        android:layout_height="110dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="160dp"
+        android:src="@drawable/logo" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="SmartSlippers"
+        android:layout_gravity="center_horizontal"
+        android:textColor="@color/white"
+        android:textSize="45dp"
+        android:fontFamily="@font/farsan" />
+
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="40dp"
+        android:indeterminateTint="@color/white"/>
+
+    <TextView
+        android:id="@+id/tvConnecting"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="60dp"
+        android:fontFamily="@font/encodesansmedium"
+        android:text="Connecting to your SmartSlippers"
+        android:textAlignment="center"
+        android:textColor="@color/white" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="created by SigmaDews"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="100dp"
+        android:textColor="@color/white"
+        android:fontFamily="@font/encodesansmedium"/>
+
+
+
+
+</LinearLayout>

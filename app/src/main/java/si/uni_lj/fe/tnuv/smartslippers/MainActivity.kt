@@ -19,6 +19,9 @@ private const val ENABLE_BLUETOOTH_REQUEST_CODE = 1
 private const val LOCATION_PERMISSION_REQUEST_CODE = 2
 private const val BLUETOOTH_PERMISSION_REQUEST_CODE = 9999
 class MainActivity : AppCompatActivity() {
+    private lateinit var serviceIntent: Intent
+    private lateinit var charServiceIntent: Intent
+    private lateinit var  activeServiceIntent: Intent
 
     var userPravilni = Users()
     var login : Int? = null
@@ -42,6 +45,19 @@ class MainActivity : AppCompatActivity() {
         //checkPermissions(this, this)
         initializeBluetoothOrRequestPermission()
 
+
+        // Stop services after signout
+        serviceIntent = Intent(applicationContext, MainService::class.java)
+        charServiceIntent = Intent(applicationContext, CharacteristicsService::class.java)
+        activeServiceIntent = Intent(applicationContext, ActiveTimeService::class.java)
+        stopService(charServiceIntent)
+        stopService(serviceIntent)
+        stopService(activeServiceIntent)
+        HomeActivity.IS_FIRST_TIME = true
+        CharacteristicsService.IS_ACTIVITY_RUNNING = false
+        ActiveTimeService.IS_ACTIVITY_RUNNING = false
+        MainService.IS_ACTIVITY_RUNNING = false
+
         loadData()
         val loginButton = findViewById<Button>(R.id.loginButton)
         val email = findViewById<EditText>(R.id.email)
@@ -57,7 +73,7 @@ class MainActivity : AppCompatActivity() {
         notPassword.alpha = 0.0f
 
         if(login == 1){
-            val intent = Intent(this, ConnectionActivity::class.java)
+            val intent = Intent(this, SplashActivityConnect::class.java)
             startActivity(intent)
         }
 
@@ -156,7 +172,17 @@ class MainActivity : AppCompatActivity() {
                 timer.start()
             }
             else {
-                val intent = Intent(this, ConnectionActivity::class.java)
+                //Toast.makeText(this, "MAC ${userPravilni.mac}" , Toast.LENGTH_SHORT).show()
+
+                val intent = if (userPravilni.mac == "none"){
+                    Log.i("HOLDER", "NO MAC")
+                    Intent(this, ConnectionActivity::class.java)
+                } else{
+                    Log.i("HOLDER", "Mac is : ${userPravilni.mac}")
+                    Intent(this, SplashActivityConnect::class.java)
+                    //Intent(this, SplashActivity::class.java)
+                }
+
                 if(checkBox.isChecked){
                     checkBox.setChecked(true)
                     login = 1
@@ -216,7 +242,7 @@ class MainActivity : AppCompatActivity() {
         userPravilni.id = savedString
         login = savedInt
 
-        Toast.makeText(this, "${userPravilni.id}, $login", Toast.LENGTH_SHORT).show()
+        //Toast.makeText(this, "${userPravilni.id}, $login", Toast.LENGTH_SHORT).show()
 
     }
 

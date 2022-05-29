@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.Window
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import si.uni_lj.fe.tnuv.smartslippers.ble.ConnectionManager
 
 class SettingsActivity : AppCompatActivity() {
     private lateinit var device: BluetoothDevice
@@ -46,6 +47,8 @@ class SettingsActivity : AppCompatActivity() {
         val confirmPasswordBtn = findViewById<Button>(R.id.confirmPasswordBtn)
         val newPassword = findViewById<EditText>(R.id.newPassword)
         val notificationsSwitch = findViewById<Switch>(R.id.notificationsSwitch)
+        val signoutbtn = findViewById<TextView>(R.id.signoutbtn)
+        val reNewPassword = findViewById<EditText>(R.id.reNewPassword)
 
         notificationsSwitch.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
@@ -59,12 +62,27 @@ class SettingsActivity : AppCompatActivity() {
 
         username.text = user.fname + " " + user.lname
 
-        confirmPasswordBtn.setOnClickListener {
+        signoutbtn.setOnClickListener {
 
             val intent = Intent(this, MainActivity::class.java)
+            ConnectionManager.teardownConnection(device)
+            resetServiceValues()
             // intent.putExtra("keyLogin", 2)
             startActivity(intent)
             saveData()
+        }
+
+        confirmPasswordBtn.setOnClickListener {
+            val newPassword = newPassword.text.toString()
+            val reNewPassword = reNewPassword.text.toString()
+
+            if(newPassword == reNewPassword){
+                user.password = newPassword
+                db.updateMac(user)
+            }
+            else{
+                Toast.makeText(this, "passwords dont match", Toast.LENGTH_SHORT).show()
+            }
         }
 
         val settingsBtn = findViewById<Button>(R.id.statsBtn)
@@ -82,6 +100,20 @@ class SettingsActivity : AppCompatActivity() {
                 it.putExtra(BluetoothDevice.EXTRA_DEVICE, device)
                 startActivity(it) }
         }
+    }
+    private fun resetServiceValues(){
+        ActiveTimeService.activeTime = 0.0
+        ActiveTimeService.lastActiveTime = 0.0
+        ActiveTimeService.currentActiveTime = 0.0
+        ActiveTimeService.IS_ACTIVITY_RUNNING = false
+
+        MainService.IS_ACTIVITY_RUNNING = false
+        MainService.IS_FIRST_TIME = true
+
+        CharacteristicsService.lastActivityName = ""
+        CharacteristicsService.stepsCounter = 0
+        CharacteristicsService.IS_ACTIVITY_RUNNING = false
+        CharacteristicsService.IS_FIRST_TIME = true
     }
 
     private fun saveData(){
