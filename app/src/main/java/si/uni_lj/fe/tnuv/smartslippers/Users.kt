@@ -8,4 +8,5 @@ public class Users {
     var email : String? = null
     var password : String? = null
     var phone : String? = null
+    var mac : String? = null
 }
