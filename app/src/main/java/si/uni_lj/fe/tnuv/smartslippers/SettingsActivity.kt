@@ -81,7 +81,7 @@ class SettingsActivity : AppCompatActivity() {
                 db.updateMac(user)
             }
             else{
-                Toast.makeText(this, "passwords dont match", Toast.LENGTH_SHORT).show()
+                //Toast.makeText(this, "passwords dont match", Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -137,7 +137,7 @@ class SettingsActivity : AppCompatActivity() {
         user.id = savedString
         login = savedInt
 
-        Toast.makeText(this, "${user.id}, $login", Toast.LENGTH_SHORT).show()
+        //Toast.makeText(this, "${user.id}, $login", Toast.LENGTH_SHORT).show()
 
     }
 
@@ -157,7 +157,7 @@ class SettingsActivity : AppCompatActivity() {
 
         notifications = savedInt
 
-        Toast.makeText(this, "$notifications", Toast.LENGTH_SHORT).show()
+        //Toast.makeText(this, "$notifications", Toast.LENGTH_SHORT).show()
 
     }
 }

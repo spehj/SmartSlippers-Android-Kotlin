@@ -211,7 +211,7 @@ class ConnectionActivity : AppCompatActivity(){
         userPravilni.id = savedString
         login = savedInt
 
-        Toast.makeText(this, "${userPravilni.id}, $login", Toast.LENGTH_SHORT).show()
+        //Toast.makeText(this, "${userPravilni.id}, $login", Toast.LENGTH_SHORT).show()
 
     }
 
@@ -244,7 +244,7 @@ class ConnectionActivity : AppCompatActivity(){
             requestLocationPermission()
         } else {
             Log.i("ConnectionActivity", "Starting to SCAN")
-            Toast.makeText(this@ConnectionActivity, "Searching for devices", Toast.LENGTH_SHORT).show()
+            //Toast.makeText(this@ConnectionActivity, "Searching for devices", Toast.LENGTH_SHORT).show()
             Log.i("ConnectionActivity", "Scanning for FUN")
             //Timber.i("Starting TO SCAN")
             val scanFilters : List<ScanFilter>

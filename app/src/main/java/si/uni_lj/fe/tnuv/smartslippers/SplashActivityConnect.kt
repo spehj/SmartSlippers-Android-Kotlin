@@ -193,7 +193,7 @@ class SplashActivityConnect : AppCompatActivity() {
             requestLocationPermission()
         } else {
             Log.i(TAG, "Starting to SCAN")
-            Toast.makeText(this@SplashActivityConnect, "Searching for your SmartSlippers", Toast.LENGTH_SHORT).show()
+            //Toast.makeText(this@SplashActivityConnect, "Searching for your SmartSlippers", Toast.LENGTH_SHORT).show()
             Log.i("TAG", "SCANNIN AGAIN WITHOUT NEED")
             //Timber.i("Starting TO SCAN")
             val scanFilters : List<ScanFilter>
