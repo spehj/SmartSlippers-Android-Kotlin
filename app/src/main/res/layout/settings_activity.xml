@@ -1,231 +1,204 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:orientation="vertical"
-    android:fillViewport="false">
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".SettingsActivity">
+
+    <RelativeLayout
+        android:id="@+id/relativeLayoutUp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:background="@color/white"
-        tools:context=".homeActivity">
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <RelativeLayout
-            android:id="@+id/relativeLayoutUp"
+        <ImageView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:layout_height="140dp"
+            app:srcCompat="@drawable/custom_shapes"
+            tools:layout_editor_absoluteX="142dp"
+            tools:layout_editor_absoluteY="142dp" />
 
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="140dp"
-                app:srcCompat="@drawable/custom_shapes"
-                tools:layout_editor_absoluteX="142dp"
-                tools:layout_editor_absoluteY="142dp" />
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="130dp"
-                app:srcCompat="@drawable/logo"
-                tools:layout_editor_absoluteX="142dp"
-                tools:layout_editor_absoluteY="142dp" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="100dp"
-                android:fontFamily="@font/encodesansmedium"
-                android:gravity="center"
-                android:text="Settings"
-                android:textColor="@color/white"
-                android:textSize="20dp"
-                android:textStyle="bold" />
-
-        </RelativeLayout>
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="130dp"
+            app:srcCompat="@drawable/logo"
+            tools:layout_editor_absoluteX="142dp"
+            tools:layout_editor_absoluteY="142dp" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            android:text="User"
+            android:layout_marginTop="100dp"
             android:fontFamily="@font/encodesansmedium"
-            android:layout_marginLeft="30dp"
-            android:textSize="20dp"
-            android:textStyle="bold"
-            android:textColor="@color/black"/>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:id="@+id/username"
-            android:background="@drawable/input_background"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="60dp"
-            android:fontFamily="@font/encodesansmedium"
-            android:textStyle="bold"
-            android:paddingLeft="15dp"
-            android:gravity="center_vertical"
-            android:text="Blaz Smehov"
+            android:gravity="center"
+            android:text="Settings"
             android:textColor="@color/white"
-            android:textSize="15dp"
-            />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:fontFamily="@font/encodesansmedium"
-            android:text="Change Password"
-            android:layout_marginLeft="30dp"
             android:textSize="20dp"
-            android:textStyle="bold"
-            android:textColor="@color/black"/>
+            android:textStyle="bold" />
 
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:id="@+id/newPassword"
-            android:background="@drawable/input_background"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="60dp"
-            android:hint="enter your new password"
-            android:textColor="@color/white"
-            android:paddingLeft="15dp"
-            android:fontFamily="@font/encodesansmedium"
-            android:textSize="15dp"/>
+    </RelativeLayout>
 
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:id="@+id/reNewPassword"
-            android:background="@drawable/input_background"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="60dp"
-            android:textColor="@color/white"
-            android:paddingLeft="15dp"
-            android:fontFamily="@font/encodesansmedium"
-            android:hint="re enter your new password"
-            android:textSize="15dp"/>
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/confirmPasswordBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:layout_marginLeft="30dp"
-            android:layout_marginBottom="15dp"
-            android:background="@drawable/button_background"
-            android:text="CONFIRM"
-            android:textSize="15sp"
-            android:fontFamily="@font/encodesansmedium"
-            android:textColor="@color/white"/>
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="Contact number"
-            android:layout_marginLeft="30dp"
-            android:textSize="20dp"
-            android:textStyle="bold"
-            android:fontFamily="@font/encodesansmedium"
-            android:textColor="@color/black"/>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:id="@+id/contactNumber"
-            android:background="@drawable/input_background"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="60dp"
-            android:textColor="@color/white"
-            android:fontFamily="@font/encodesansmedium"
-            android:textSize="25dp"/>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="Send notifications"
-            android:layout_marginLeft="30dp"
-            android:textSize="20dp"
-            android:textStyle="bold"
-            android:fontFamily="@font/encodesansmedium"
-            android:textColor="@color/black"/>
-
-        <Switch
-            android:id="@+id/notificationsSwitch"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="30dp"
-            android:layout_marginTop="10dp"
-            />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/signoutbtn"
-            android:layout_marginLeft="30dp"
-            android:layout_marginTop="15dp"
-            android:textColor="@color/ozadjeModra"
-            android:text="Sign out"
-            android:fontFamily="@font/encodesansmedium"/>
-
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="25dp">
+            android:layout_weight="1"
+            app:layout_constraintTop_toBottomOf="@+id/relativeLayoutUp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginTop="30dp"
+                    android:fontFamily="@font/encodesansmedium"
+                    android:text="User"
+                    android:textColor="@color/black"
+                    android:textSize="20dp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/username"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="60dp"
+                    android:background="@drawable/input_background"
+                    android:fontFamily="@font/encodesansmedium"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:text="Blaz Smehov"
+                    android:textColor="@color/white"
+                    android:textSize="15dp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/textView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/encodesansmedium"
+                    android:text="Change Password"
+                    android:textColor="@color/black"
+                    android:textSize="20dp"
+                    android:textStyle="bold"
+                    tools:layout_editor_absoluteX="30dp" />
+
+                <EditText
+                    android:id="@+id/newPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="60dp"
+                    android:background="@drawable/input_background"
+                    android:fontFamily="@font/encodesansmedium"
+                    android:hint="enter your new password"
+                    android:paddingLeft="15dp"
+                    android:textColor="@color/white"
+                    android:textSize="15dp" />
+
+                <EditText
+                    android:id="@+id/reNewPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="60dp"
+                    android:background="@drawable/input_background"
+                    android:fontFamily="@font/encodesansmedium"
+                    android:hint="re enter your new password"
+                    android:paddingLeft="15dp"
+                    android:textColor="@color/white"
+                    android:textSize="15dp" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/confirmPasswordBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginBottom="15dp"
+                    android:background="@drawable/button_background"
+                    android:fontFamily="@font/encodesansmedium"
+                    android:text="CONFIRM"
+                    android:textColor="@color/white"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/textView2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/encodesansmedium"
+                    android:text="Contact number"
+                    android:textColor="@color/black"
+                    android:textSize="20dp"
+                    android:textStyle="bold"
+                    tools:layout_editor_absoluteX="30dp" />
+
+                <TextView
+                    android:id="@+id/contactNumber"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="60dp"
+                    android:background="@drawable/input_background"
+                    android:fontFamily="@font/encodesansmedium"
+                    android:textColor="@color/white"
+                    android:textSize="25dp" />
+
+                <TextView
+                    android:id="@+id/textView3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/encodesansmedium"
+                    android:text="Send notifications"
+                    android:textColor="@color/black"
+                    android:textSize="20dp"
+                    android:textStyle="bold"
+                    tools:layout_editor_absoluteX="30dp" />
+
+                <Switch
+                    android:id="@+id/notificationsSwitch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginTop="10dp" />
+
+                <TextView
+                    android:id="@+id/signoutbtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginTop="15dp"
+                    android:fontFamily="@font/encodesansmedium"
+                    android:text="Sign out"
+                    android:textColor="@color/ozadjeModra"
+                    android:paddingBottom="20dp"
+                    />
+
+            </LinearLayout>
 
 
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/settingsBtn"
-                android:layout_width="0dp"
-                android:layout_height="60dp"
-                android:layout_weight="1"
-                android:background="@drawable/toolbar_levo"
-                android:fontFamily="@font/encodesansmedium"
-                android:layout_gravity="bottom"
-                android:text="SETTINGS"
-                android:textColor="@color/white"
-                android:textSize="10sp"
-                android:textStyle="bold" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/homeBtn"
-                android:layout_width="0dp"
-                android:layout_height="60dp"
-                android:layout_weight="1"
-                android:background="@drawable/toolbar_middle"
-                android:fontFamily="@font/encodesansmedium"
-                android:layout_gravity="bottom"
-                android:text="HOME"
-                android:textColor="@color/white"
-                android:textSize="10sp"
-                android:textStyle="bold" />
+    </androidx.core.widget.NestedScrollView>
 
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/statsBtn"
-                android:layout_width="0dp"
-                android:layout_height="60dp"
-                android:layout_weight="1"
-                android:layout_gravity="bottom"
-                android:background="@drawable/toolbar_right"
-                android:fontFamily="@font/encodesansmedium"
-                android:text="STATS"
-                android:textColor="@color/white"
-                android:textSize="10sp"
-                android:textStyle="bold" />
-        </LinearLayout>
-    </LinearLayout>
-</ScrollView>
+    <include layout="@layout/bottom_menu"></include>
+
+
+</LinearLayout>
