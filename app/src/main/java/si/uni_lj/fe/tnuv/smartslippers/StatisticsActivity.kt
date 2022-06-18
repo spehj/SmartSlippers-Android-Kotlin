@@ -6,12 +6,15 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Window
 import android.widget.Button
+import androidx.fragment.app.Fragment
 import si.uni_lj.fe.tnuv.smartslippers.databinding.ActivityMainBinding
+import si.uni_lj.fe.tnuv.smartslippers.databinding.ActivityStatisticsBinding
 
 class StatisticsActivity : AppCompatActivity() {
     private lateinit var device: BluetoothDevice
 
-    lateinit var binding : ActivityMainBinding
+    //lateinit var binding : ActivityMainBinding
+    lateinit var binding : ActivityStatisticsBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,6 +27,23 @@ class StatisticsActivity : AppCompatActivity() {
         //binding = ActivityMainBinding.inflate(layoutInflater)
         //setContentView(binding.root)
 
+        binding = ActivityStatisticsBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        replaceFragment(FragmentDay())
+
+        binding.btnToday.setOnClickListener {
+
+            replaceFragment(FragmentDay())
+        }
+
+        binding.btnWeek.setOnClickListener {
+            replaceFragment(FragmentWeek())
+        }
+
+        binding.btnMonth.setOnClickListener {
+            replaceFragment(FragmentMonth())
+        }
+
 
 
 
@@ -31,8 +51,9 @@ class StatisticsActivity : AppCompatActivity() {
         val settingsBtn = findViewById<Button>(R.id.settingsBtn)
 
         settingsBtn.setOnClickListener {
-            val intent = Intent(this, SettingsActivity::class.java)
-            startActivity(intent)
+            val intent = Intent(this, SettingsActivity::class.java).also {
+                it.putExtra(BluetoothDevice.EXTRA_DEVICE, device)
+                startActivity(it) }
         }
 
 
@@ -44,5 +65,13 @@ class StatisticsActivity : AppCompatActivity() {
                 startActivity(it) }
         }
 
+    }
+
+    private fun replaceFragment(fragment : Fragment){
+
+        val fragmentManager = supportFragmentManager
+        val fragmentTransaction = fragmentManager.beginTransaction()
+        fragmentTransaction.replace(R.id.statsFrame, fragment)
+        fragmentTransaction.commit()
     }
 }

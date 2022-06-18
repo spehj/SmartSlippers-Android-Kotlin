@@ -88,8 +88,9 @@ class SettingsActivity : AppCompatActivity() {
         val settingsBtn = findViewById<Button>(R.id.statsBtn)
 
         settingsBtn.setOnClickListener {
-            val intent = Intent(this, StatisticsActivity::class.java)
-            startActivity(intent)
+            val intent = Intent(this, StatisticsActivity::class.java).also {
+                it.putExtra(BluetoothDevice.EXTRA_DEVICE, device)
+                startActivity(it) }
         }
 
 

@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/white"
     tools:context=".SettingsActivity">
 
     <RelativeLayout
@@ -93,6 +94,8 @@
                     android:fontFamily="@font/encodesansmedium"
                     android:text="Change Password"
                     android:textColor="@color/black"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginTop="30dp"
                     android:textSize="20dp"
                     android:textStyle="bold"
                     tools:layout_editor_absoluteX="30dp" />
@@ -147,6 +150,8 @@
                     android:textColor="@color/black"
                     android:textSize="20dp"
                     android:textStyle="bold"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginTop="30dp"
                     tools:layout_editor_absoluteX="30dp" />
 
                 <TextView
@@ -170,6 +175,8 @@
                     android:textColor="@color/black"
                     android:textSize="20dp"
                     android:textStyle="bold"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginTop="30dp"
                     tools:layout_editor_absoluteX="30dp" />
 
                 <Switch
@@ -177,7 +184,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="30dp"
-                    android:layout_marginTop="10dp" />
+                    android:layout_marginTop="10dp"
+                    />
 
                 <TextView
                     android:id="@+id/signoutbtn"
