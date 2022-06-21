@@ -71,7 +71,7 @@ class SplashActivity : AppCompatActivity() {
                     arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 1)
             }
         }
-        var x = userPravilni.id!!.toLong()
+        var x = userPravilni.id?.toLong()
         user = db.getName(x)
 
 

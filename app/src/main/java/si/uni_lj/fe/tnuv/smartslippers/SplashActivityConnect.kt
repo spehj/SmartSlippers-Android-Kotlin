@@ -128,7 +128,7 @@ class SplashActivityConnect : AppCompatActivity() {
             }
         }
         //ConnectionManager.registerListener(connectionEventListener)
-        var x = userPravilni.id!!.toLong()
+        var x = userPravilni.id?.toLong()
         user = db.getName(x)
 
 

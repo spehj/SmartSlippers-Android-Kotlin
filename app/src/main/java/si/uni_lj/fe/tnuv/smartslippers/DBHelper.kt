@@ -84,7 +84,7 @@ class DBHelper(context: Context, factory: SQLiteDatabase.CursorFactory?) :
     }
 
     @SuppressLint("Range")
-    fun getName(id: Long) : Users {
+    fun getName(id: Long?) : Users {
         var user = Users()
         val db = this.writableDatabase
         val whereclause = "ID=?"
@@ -120,13 +120,13 @@ class DBHelper(context: Context, factory: SQLiteDatabase.CursorFactory?) :
         // here we have defined variables for our database
 
         // below is variable for database name
-        private val DATABASE_NAME = "IOT2"
+        private val DATABASE_NAME = "SmartSlippers1"
 
         // below is the variable for database version
         private val DATABASE_VERSION = 1
 
         // below is the variable for table name
-        val TABLE_NAME = "gfg_table1"
+        val TABLE_NAME = "TNUV2023"
 
         // below is the variable for id column
         val ID_COL = "id"
@@ -146,4 +146,3 @@ class DBHelper(context: Context, factory: SQLiteDatabase.CursorFactory?) :
         val MAC_COl = "mac"
     }
 }
-
